@@ -1,9 +1,10 @@
 // is.js 0.8.0
-// Author: Aras Atasaygin
+// Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
+// Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
 
 // AMD with global, Node, or global
-;(function(root, factory) {
-    if(typeof define === 'function' && define.amd) {
+; (function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(function() {
             // Also create a global in case some scripts
@@ -11,7 +12,7 @@
             // a global even when an AMD loader is in use.
             return (root.is = factory());
         });
-    } else if(typeof exports === 'object') {
+    } else if (typeof exports === 'object') {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
@@ -54,7 +55,7 @@
         return function() {
             var parameters = arraySlice.call(arguments);
             var length = parameters.length;
-            if(length === 1 && is.array(parameters[0])) {    // support array
+            if (length === 1 && is.array(parameters[0])) {    // support array
                 parameters = parameters[0];
                 length = parameters.length;
             }
@@ -72,7 +73,7 @@
         return function() {
             var parameters = arraySlice.call(arguments);
             var length = parameters.length;
-            if(length === 1 && is.array(parameters[0])) {    // support array
+            if (length === 1 && is.array(parameters[0])) {    // support array
                 parameters = parameters[0];
                 length = parameters.length;
             }
@@ -152,7 +153,7 @@
     // are given values same type?
     // prevent NaN, Number same type check
     is.sameType = function(value1, value2) {
-        if(is.nan(value1) || is.nan(value2)) {
+        if (is.nan(value1) || is.nan(value2)) {
             return is.nan(value1) === is.nan(value2);
         }
         return toString.call(value1) === toString.call(value2);
@@ -180,9 +181,9 @@
 
     //is a given value empty? Objects, arrays, strings
     is.empty = function(value) {
-        if(is.object(value)){
+        if (is.object(value)) {
             var num = Object.getOwnPropertyNames(value).length;
-            if(num === 0 || (num === 1 && is.array(value)) || (num === 2 && is.arguments(value))){
+            if (num === 0 || (num === 1 && is.array(value)) || (num === 2 && is.arguments(value))) {
                 return true;
             }
             return false;
@@ -206,10 +207,10 @@
 
     // is a given value space?
     // horizantal tab: 9, line feed: 10, vertical tab: 11, form feed: 12, carriage return: 13, space: 32
-    is.space =  function(value) {
-        if(is.char(value)) {
+    is.space = function(value) {
+        if (is.char(value)) {
             var characterCode = value.charCodeAt(0);
-            return (characterCode >  8 && characterCode < 14) || characterCode === 32;
+            return (characterCode > 8 && characterCode < 14) || characterCode === 32;
         } else {
             return false;
         }
@@ -222,14 +223,14 @@
     // TODO: Add object and array support
     is.equal = function(value1, value2) {
         // check 0 and -0 equity with Infinity and -Infinity
-        if(is.all.number(value1, value2)) {
+        if (is.all.number(value1, value2)) {
             return value1 === value2 && 1 / value1 === 1 / value2;
         }
         // check regexps as strings too
-        if(is.all.string(value1, value2) || is.all.regexp(value1, value2)) {
+        if (is.all.string(value1, value2) || is.all.regexp(value1, value2)) {
             return '' + value1 === '' + value2;
         }
-        if(is.all.boolean(value1, value2)) {
+        if (is.all.boolean(value1, value2)) {
             return value1 === value2;
         }
         return false;
@@ -327,8 +328,8 @@
     };
 
     // create regexp checks methods from 'regexp' object
-    for(var regexp in regexps) {
-        if(regexps.hasOwnProperty(regexp)) {
+    for (var regexp in regexps) {
+        if (regexps.hasOwnProperty(regexp)) {
             regexpCheck(regexp, regexps);
         }
     }
@@ -368,19 +369,19 @@
 
     // is string end with a given endWith parameter?
     is.endWith = function(str, endWith) {
-        return is.string(str) && str.indexOf(endWith) > -1 && str.indexOf(endWith) === str.length -  endWith.length;
+        return is.string(str) && str.indexOf(endWith) > -1 && str.indexOf(endWith) === str.length - endWith.length;
     };
     // endWith method does not support 'all' and 'any' interfaces
     is.endWith.api = ['not'];
 
     // is a given string or sentence capitalized?
     is.capitalized = function(str) {
-        if(is.not.string(str)) {
+        if (is.not.string(str)) {
             return false;
         }
         var words = str.split(' ');
         var capitalized = [];
-        for(var i = 0; i < words.length; i++) {
+        for (var i = 0; i < words.length; i++) {
             capitalized.push(words[i][0] === words[i][0].toUpperCase());
         }
         return is.all.truthy.apply(null, capitalized);
@@ -464,7 +465,7 @@
 
     // is date within given range?
     is.inDateRange = function(obj, startObj, endObj) {
-        if(is.not.date(obj) || is.not.date(startObj) || is.not.date(endObj)) {
+        if (is.not.date(obj) || is.not.date(startObj) || is.not.date(endObj)) {
             return false;
         }
         var givenDate = obj.getTime();
@@ -524,7 +525,7 @@
     /* -------------------------------------------------------------------------- */
 
     // check if library is used as a Node.js module
-    if(typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
 
         // store navigator properties to use later
         var userAgent = 'navigator' in window && 'userAgent' in navigator && navigator.userAgent.toLowerCase() || '';
@@ -555,10 +556,10 @@
         // is current browser internet explorer?
         // parameter is optional
         is.ie = function(version) {
-            if(!version) {
+            if (!version) {
                 return /msie/i.test(userAgent) || "ActiveXObject" in window;
             }
-            if(version >= 11) {
+            if (version >= 11) {
                 return "ActiveXObject" in window;
             }
             return new RegExp('msie ' + version).test(userAgent);
@@ -707,7 +708,7 @@
 
         // is current device supports touch?
         is.touchDevice = function() {
-            return 'ontouchstart' in window ||'DocumentTouch' in window && document instanceof DocumentTouch;
+            return 'ontouchstart' in window || 'DocumentTouch' in window && document instanceof DocumentTouch;
         };
         // touchDevice method does not support 'all' and 'any' interfaces
         is.touchDevice.api = ['not'];
@@ -718,15 +719,15 @@
 
     // has a given object got parameterized count property?
     is.propertyCount = function(obj, count) {
-        if(!is.object(obj) || !is.number(count)) {
+        if (!is.object(obj) || !is.number(count)) {
             return false;
         }
-        if(Object.keys) {
+        if (Object.keys) {
             return Object.keys(obj).length === count;
         }
         var properties = [],
             property;
-        for(property in obj) {
+        for (property in obj) {
             if (hasOwnProperty.call(obj, property)) {
                 properties.push(property);
             }
@@ -758,11 +759,11 @@
     /* -------------------------------------------------------------------------- */
 
     // is a given item in an array?
-    is.inArray = function(val, arr){
-        if(is.not.array(arr)) {
+    is.inArray = function(val, arr) {
+        if (is.not.array(arr)) {
             return false;
         }
-        for(var i = 0; i < arr.length; i++) {
+        for (var i = 0; i < arr.length; i++) {
             if (arr[i] === val) return true;
         }
         return false;
@@ -772,11 +773,11 @@
 
     // is a given array sorted?
     is.sorted = function(arr) {
-        if(is.not.array(arr)) {
+        if (is.not.array(arr)) {
             return false;
         }
-        for(var i = 0; i < arr.length; i++) {
-            if(arr[i] > arr[i + 1]) return false;
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] > arr[i + 1]) return false;
         }
         return true;
     };
@@ -787,17 +788,17 @@
 
     function setInterfaces() {
         var options = is;
-        for(var option in options) {
-            if(hasOwnProperty.call(options, option) && is.function(options[option])) {
+        for (var option in options) {
+            if (hasOwnProperty.call(options, option) && is.function(options[option])) {
                 var interfaces = options[option].api || ['not', 'all', 'any'];
                 for (var i = 0; i < interfaces.length; i++) {
-                    if(interfaces[i] === 'not') {
+                    if (interfaces[i] === 'not') {
                         is.not[option] = not(is[option]);
                     }
-                    if(interfaces[i] === 'all') {
+                    if (interfaces[i] === 'all') {
                         is.all[option] = all(is[option]);
                     }
-                    if(interfaces[i] === 'any') {
+                    if (interfaces[i] === 'any') {
                         is.any[option] = any(is[option]);
                     }
                 }
@@ -812,8 +813,8 @@
 
     // set optional regexps to methods if you think they suck
     is.setRegexp = function(regexp, regexpName) {
-        for(var r in regexps) {
-            if(hasOwnProperty.call(regexps, r) && (regexpName === r)) {
+        for (var r in regexps) {
+            if (hasOwnProperty.call(regexps, r) && (regexpName === r)) {
                 regexps[r] = regexp;
             }
         }

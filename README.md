@@ -1,7 +1,8 @@
-is.js
+is.ts
 =====
+This is fork of is.js converted to typescript
 
-[![JS.ORG](https://img.shields.io/badge/js.org-is-ffb400.svg?style=flat-square)](http://js.org)
+work on fork only begins...
 
 ####This is a general-purpose check library.
 - No dependencies
@@ -11,29 +12,13 @@ is.js
 
 Node.js:
 ```
-npm install is_js
+npm install is_ts
 ```
 
-Bower:
+Build in bash:
 ```
-bower install is_js
+./build.sh
 ```
-
-Build:
-```
-grunt build
-```
-
-Test:
-```
-grunt test
-```
-
-####Contributing:
-Thanks for considering to contribute. Check [here](CONTRIBUTING.md)
-
-####Contributors:
-Many thanks to our contributors: https://github.com/arasatasaygin/is.js/graphs/contributors
 
 Type checks
 ===========
