@@ -1,7 +1,8 @@
 {
   "name": "is_ts",
   "version": "0.8.0",
-  "main": "is.js",
+  "main": "./is.js",
+  "typings": "./is.d.ts",
   "license": "MIT",
   "description": "micro check library on typescript",
   "repository": {
@@ -13,6 +14,7 @@
   },
   "homepage": "https://github.com/LabEG/is.js",
   "devDependencies": {
-      
+    "tslint": "^3.6.0",
+    "typescript": "^1.8.9"
   }
 }
