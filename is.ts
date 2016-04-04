@@ -206,8 +206,11 @@ export class Is {
     // are given values equal? supports numbers, strings, regexps, booleans
     // TODO: Add object and array support
     public equal(value1, value2): boolean {
+
+        return JSON.stringify(value1) === JSON.stringify(value2);
+
         // check 0 and -0 equity with Infinity and -Infinity
-        if (this.all.number(value1, value2)) {
+        /*if (this.all.number(value1, value2)) {
             return value1 === value2 && 1 / value1 === 1 / value2;
         }
         // check regexps as strings too
@@ -217,7 +220,7 @@ export class Is {
         if (this.all.boolean(value1, value2)) {
             return value1 === value2;
         }
-        return false;
+        return false;*/
     };
 
     // is a given number even?
@@ -242,17 +245,17 @@ export class Is {
 
     // is a given number above minimum parameter?
     public above(numb: number, min: number): boolean {
-        return this.all.number(numb, min) && numb > min;
+        return this.number(numb) && this.number(min) && numb > min;
     };
 
     // is a given number above maximum parameter?
     public under(numb: number, max: number): boolean {
-        return this.all.number(numb, max) && numb < max;
+        return this.number(numb) && this.number(max) && numb < max;
     };
 
     // is a given number within minimum and maximum parameters?
     public within(numb: number, min: number, max: number): boolean {
-        return this.all.number(numb, min, max) && numb > min && numb < max;
+        return this.number(numb) && this.number(min) && this.number(max) && numb > min && numb < max;
     };
 
     // is a given number decimal?
@@ -392,7 +395,7 @@ export class Is {
         for (let i: number = 0; i < words.length; i++) {
             capitalized.push(words[i][0] === words[i][0].toUpperCase());
         }
-        return this.all.truthy.apply(null, capitalized);
+        return this.truthy.apply(null, capitalized);
     };
 
     // is a given string palindrome?
@@ -660,7 +663,7 @@ export class Is {
     // is current device supports touch?
     public touchDevice(): boolean {
         return typeof window !== void 0 ?
-            ("ontouchstart" in window || "DocumentTouch" in window && document instanceof DocumentTouch) : false;
+            ("ontouchstart" in window || "DocumentTouch" in window) : false; //  && document instanceof DocumentTouch
     };
 
 
