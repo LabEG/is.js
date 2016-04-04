@@ -1,8 +1,8 @@
 is.ts
 =====
-This is fork of is.js converted to typescript
+This is fork of is.js converted to typescript.
 
-work on fork only begins...
+All 'not', 'all', 'any' fuction is deprecated. If you needed them, please write issue and i restore their.
 
 ####This is a general-purpose check library.
 - No dependencies
