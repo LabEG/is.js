@@ -5,74 +5,34 @@
 // Baseline
 /* -------------------------------------------------------------------------- */
 
-namespace IS {
-    'use strict';
-
-    // cache some methods to call later on
-    const toString = Object.prototype.toString;
-    const arraySlice = Array.prototype.slice;
-    const hasOwnProperty = Object.prototype.hasOwnProperty;
-
-    // helper function which reverses the sense of predicate result
-    function not(func) {
-        return function() {
-            return !func.apply(null, arraySlice.call(arguments));
-        };
-    }
-
-    // helper function which call predicate function per parameter and return true if all pass
-    function all(func) {
-        return function() {
-            const parameters = arraySlice.call(arguments);
-            const length = parameters.length;
-            if (length === 1 && is.array(parameters[0])) {    // support array
-                parameters = parameters[0];
-                length = parameters.length;
-            }
-            for (const i = 0; i < length; i++) {
-                if (!func.call(null, parameters[i])) {
-                    return false;
-                }
-            }
-            return true;
-        };
-    }
-
-    // helper function which call predicate function per parameter and return true if any pass
-    function any(func) {
-        return function() {
-            const parameters = arraySlice.call(arguments);
-            const length = parameters.length;
-            if (length === 1 && is.array(parameters[0])) {    // support array
-                parameters = parameters[0];
-                length = parameters.length;
-            }
-            for (const i = 0; i < length; i++) {
-                if (func.call(null, parameters[i])) {
-                    return true;
-                }
-            }
-            return false;
-        };
-    }
-
-}
-
-// define interfaces
-is.not = {};
-is.all = {};
-is.any = {};
-
 export class Is {
 
     public VERSION: string = '0.8.0';
+
+    public days: string[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    public months: string[] = [
+        'january', 'february', 'march',
+        'april', 'may', 'june',
+        'july', 'august', 'september',
+        'october', 'november', 'december'
+    ];
+
+    // cache some methods to call later on
+    private toString: () => String = Object.prototype.toString;
+    private arraySlice: (start?: number, end?: number) => any[] = Array.prototype.slice;
+    private hasOwnProperty: (value: string) => boolean = Object.prototype.hasOwnProperty;
+
+    // store navigator properties to use later
+    public userAgent: string = 'navigator' in window && 'userAgent' in navigator && navigator.userAgent.toLowerCase() || '';
+    public vendor: string = 'navigator' in window && 'vendor' in navigator && navigator.vendor.toLowerCase() || '';
+    public appVersion: string = 'navigator' in window && 'appVersion' in navigator && navigator.appVersion.toLowerCase() || '';
 
     // Type checks
     /* -------------------------------------------------------------------------- */
 
     // is a given value Arguments?
     public arguments(value): boolean {    // fallback check is for IE
-        return this.not.null(value) && (toString.call(value) === '[object Arguments]' || (typeof value === 'object' && 'callee' in value));
+        return !this.null(value) && (toString.call(value) === '[object Arguments]' || (typeof value === 'object' && 'callee' in value));
     };
 
     // is a given value Array?
@@ -112,7 +72,7 @@ export class Is {
 
     // is a given value number?
     public number(value): boolean {
-        return this.not.nan(value) && toString.call(value) === '[object Number]';
+        return !this.nan(value) && toString.call(value) === '[object Number]';
     };
 
     // is a given value object?
@@ -139,8 +99,6 @@ export class Is {
         }
         return toString.call(value1) === toString.call(value2);
     };
-    // sameType method does not support 'all' and 'any' interfaces
-    // public sameType.api = ['not'];
 
     // is a given value String?
     public string(value): boolean {
@@ -165,7 +123,7 @@ export class Is {
     public empty(value): boolean {
         if (this.object(value)) {
             const num: number = Object.getOwnPropertyNames(value).length;
-            if (num === 0 || (num === 1 && is.array(value)) || (num === 2 && is.arguments(value))) {
+            if (num === 0 || (num === 1 && this.array(value)) || (num === 2 && this.arguments(value))) {
                 return true;
             }
             return false;
@@ -181,11 +139,13 @@ export class Is {
 
     // is a given value truthy?
     public truthy(value): boolean {
-        return this.existy(value) && value !== false && this.not.nan(value) && value !== "" && value !== 0;
+        return this.existy(value) && value !== false && !this.nan(value) && value !== "" && value !== 0;
     };
 
     // is a given value falsy?
-    public falsy = not(this.truthy);
+    public falsy(value): boolean {
+        return this.truthy(value);
+    };
 
     // is a given value space?
     // horizantal tab: 9, line feed: 10, vertical tab: 11, form feed: 12, carriage return: 13, space: 32
@@ -218,8 +178,6 @@ export class Is {
         }
         return false;
     };
-    // equal method does not support 'all' and 'any' interfaces
-    // public equal.api = ['not'];
 
     // is a given number even?
     public even(numb): boolean {
@@ -245,22 +203,16 @@ export class Is {
     public above(numb, min): boolean {
         return this.all.number(numb, min) && numb > min;
     };
-    // above method does not support 'all' and 'any' interfaces
-    // public above.api = ['not'];
 
     // is a given number above maximum parameter?
     public under(numb, max): boolean {
         return this.all.number(numb, max) && numb < max;
     };
-    // least method does not support 'all' and 'any' interfaces
-    // public under.api = ['not'];
 
     // is a given number within minimum and maximum parameters?
     public within(numb, min, max): boolean {
         return this.all.number(numb, min, max) && numb > min && numb < max;
     };
-    // within method does not support 'all' and 'any' interfaces
-    // public within.api = ['not'];
 
     // is a given number decimal?
     public decimal(numb): boolean {
@@ -273,12 +225,14 @@ export class Is {
     };
 
     // is a given number finite?
-    public finite(numb) {
-        return isFinite ? isFinite(numb) : numb !== Infinity && numb !== -Infinity && this.not.nan(numb);
+    public finite(numb): boolean {
+        return isFinite ? isFinite(numb) : numb !== Infinity && numb !== -Infinity && !this.nan(numb);
     };
 
     // is a given number infinite?
-    public infinite = not(this.finite);
+    public infinite(numb): boolean {
+        return this.finite(numb);
+    };
 
 
     // Regexp checks
@@ -315,8 +269,73 @@ export class Is {
         return this.regexps.url.test(value);
     }
 
-    // todo: others regexps
+    public email(value: string): boolean {
+        return this.regexps.email.test(value);
+    }
 
+    public creditCard(value: string): boolean {
+        return this.regexps.creditCard.test(value);
+    }
+
+    public alphaNumeric(value: string): boolean {
+        return this.regexps.alphaNumeric.test(value);
+    }
+
+    public timeString(value: string): boolean {
+        return this.regexps.timeString.test(value);
+    }
+
+    public dateString(value: string): boolean {
+        return this.regexps.dateString.test(value);
+    }
+
+    public usZipCode(value: string): boolean {
+        return this.regexps.usZipCode.test(value);
+    }
+
+    public caPostalCode(value: string): boolean {
+        return this.regexps.caPostalCode.test(value);
+    }
+
+    public ukPostCode(value: string): boolean {
+        return this.regexps.ukPostCode.test(value);
+    }
+
+    public nanpPhone(value: string): boolean {
+        return this.regexps.nanpPhone.test(value);
+    }
+
+    public eppPhone(value: string): boolean {
+        return this.regexps.eppPhone.test(value);
+    }
+
+    public socialSecurityNumber(value: string): boolean {
+        return this.regexps.socialSecurityNumber.test(value);
+    }
+
+    public affirmative(value: string): boolean {
+        return this.regexps.affirmative.test(value);
+    }
+
+    public hexadecimal(value: string): boolean {
+        return this.regexps.hexadecimal.test(value);
+    }
+
+    public hexColor(value: string): boolean {
+        return this.regexps.hexColor.test(value);
+    }
+
+    public ipv4(value: string): boolean {
+        return this.regexps.ipv4.test(value);
+    }
+
+    public ipv6(value: string): boolean {
+        return this.regexps.ipv6.test(value);
+    }
+
+    public ip(value: string): boolean {
+        return this.regexps.nanpPhone.test(value);
+    }
 
 
     // String checks
@@ -355,7 +374,7 @@ export class Is {
 
     // is a given string or sentence capitalized?
     public capitalized(str): boolean {
-        if (this.not.string(str)) {
+        if (!this.string(str)) {
             return false;
         }
         const words: string[] = str.split(' ');
@@ -371,16 +390,9 @@ export class Is {
         return this.string(str) && str == str.split('').reverse().join('');
     };
 
+
     // Time checks
     /* -------------------------------------------------------------------------- */
-
-    public days: string[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    public months: string[] = [
-        'january', 'february', 'march',
-        'april', 'may', 'june',
-        'july', 'august', 'september',
-        'october', 'november', 'december'
-    ];
 
     // is a given date indicate today?
     public today(obj: Date): boolean {
@@ -410,28 +422,24 @@ export class Is {
     };
 
     // is a given date future?
-    public future = not(is.past);
+    public future(obj: Date): boolean {
+        return this.past(obj);
+    }
 
     // is a given dates day equal given dayString parameter?
     public day(obj: Date, dayString): boolean {
         return this.date(obj) && dayString.toLowerCase() === this.days[obj.getDay()];
     };
-    // day method does not support 'all' and 'any' interfaces
-    // public day.api = ['not'];
 
     // is a given dates month equal given monthString parameter?
     public month(obj: Date, monthString): boolean {
         return this.date(obj) && monthString.toLowerCase() === this.months[obj.getMonth()];
     };
-    // month method does not support 'all' and 'any' interfaces
-    // public month.api = ['not'];
 
     // is a given dates year equal given year parameter?
-    public year(obj: Date, year): boolean {
+    public year(obj: Date, year: number): boolean {
         return this.date(obj) && this.number(year) && year === obj.getFullYear();
     };
-    // year method does not support 'all' and 'any' interfaces
-    // public year.api = ['not'];
 
     // is the given year a leap year?
     public leapYear(year: number): boolean {
@@ -445,11 +453,13 @@ export class Is {
     };
 
     // is a given date weekday?
-    public weekday = not(is.weekend);
+    public weekday(obj: Date): boolean {
+        return this.weekend(obj);
+    };
 
     // is date within given range?
     public inDateRange(obj: Date, startObj: Date, endObj: Date): boolean {
-        if (this.not.date(obj) || this.not.date(startObj) || this.not.date(endObj)) {
+        if (!this.date(obj) || !this.date(startObj) || !this.date(endObj)) {
             return false;
         }
         const givenDate: number = obj.getTime();
@@ -509,35 +519,27 @@ export class Is {
     // Environment checks
     /* -------------------------------------------------------------------------- */
 
-    // store navigator properties to use later
-    public userAgent: string = 'navigator' in window && 'userAgent' in navigator && navigator.userAgent.toLowerCase() || '';
-    public vendor: string = 'navigator' in window && 'vendor' in navigator && navigator.vendor.toLowerCase() || '';
-    public appVersion: string = 'navigator' in window && 'appVersion' in navigator && navigator.appVersion.toLowerCase() || '';
-
     // is current browser chrome?
     public chrome(): boolean {
         return typeof window !== void 0 ? /chrome|chromium/i.test(this.userAgent) && /google inc/.test(this.vendor) : false;
     };
-    // chrome method does not support 'all' and 'any' interfaces
-    // public chrome.api = ['not'];
 
     // is current browser firefox?
     public firefox(): boolean {
-        return /firefox/i.test(this.userAgent);
+        return typeof window !== void 0 ? /firefox/i.test(this.userAgent) : false;
     };
-    // firefox method does not support 'all' and 'any' interfaces
-    // public firefox.api = ['not'];
 
     // is current browser edge?
     public edge(): boolean {
-        return /edge/i.test(this.userAgent);
+        return typeof window !== void 0 ? /edge/i.test(this.userAgent) : false;
     };
-    // edge method does not support 'all' and 'any' interfaces
-    // public edge.api = ['not'];
 
     // is current browser internet explorer?
     // parameter is optional
     public ie(version?: number): boolean {
+        if (typeof window === void 0) {
+            return false;
+        }
         if (!version) {
             return /msie/i.test(this.userAgent) || "ActiveXObject" in window;
         }
@@ -546,154 +548,113 @@ export class Is {
         }
         return new RegExp('msie ' + version).test(this.userAgent);
     };
-    // ie method does not support 'all' and 'any' interfaces
-    // public ie.api = ['not'];
 
     // is current browser opera?
     public opera(): boolean {
-        return /^Opera\//.test(this.userAgent) || // Opera 12 and older versions
-            /\x20OPR\//.test(this.userAgent); // Opera 15+
+        return typeof window !== void 0 ? (/^Opera\//.test(this.userAgent) || // Opera 12 and older versions
+            /\x20OPR\//.test(this.userAgent)) : false; // Opera 15+
     };
-    // opera method does not support 'all' and 'any' interfaces
-    // public opera.api = ['not'];
 
     // is current browser safari?
     public safari(): boolean {
-        return /safari/i.test(this.userAgent) && /apple computer/i.test(this.vendor);
+        return typeof window !== void 0 ? (/safari/i.test(this.userAgent) && /apple computer/i.test(this.vendor)) : false;;
     };
-    // safari method does not support 'all' and 'any' interfaces
-    // public safari.api = ['not'];
 
     // is current device ios?
     public ios(): boolean {
-        return this.iphone() || this.ipad() || this.ipod();
+        return typeof window !== void 0 ? (this.iphone() || this.ipad() || this.ipod()) : false;
     };
-    // ios method does not support 'all' and 'any' interfaces
-    // public ios.api = ['not'];
 
     // is current device iphone?
     public iphone(): boolean {
-        return /iphone/i.test(this.userAgent);
+        return typeof window !== void 0 ? /iphone/i.test(this.userAgent) : false;
     };
-    // iphone method does not support 'all' and 'any' interfaces
-    // public iphone.api = ['not'];
 
     // is current device ipad?
     public ipad(): boolean {
-        return /ipad/i.test(this.userAgent);
+        return typeof window !== void 0 ? /ipad/i.test(this.userAgent) : false;
     };
-    // ipad method does not support 'all' and 'any' interfaces
-    // public ipad.api = ['not'];
 
     // is current device ipod?
     public ipod(): boolean {
-        return /ipod/i.test(this.userAgent);
+        return typeof window !== void 0 ? /ipod/i.test(this.userAgent) : false;
     };
-    // ipod method does not support 'all' and 'any' interfaces
-    // public ipod.api = ['not'];
 
     // is current device android?
     public android(): boolean {
-        return /android/i.test(this.userAgent);
+        return typeof window !== void 0 ? /android/i.test(this.userAgent) : false;
     };
-    // android method does not support 'all' and 'any' interfaces
-    // public android.api = ['not'];
 
     // is current device android phone?
     public androidPhone(): boolean {
-        return /android/i.test(this.userAgent) && /mobile/i.test(this.userAgent);
+        return typeof window !== void 0 ? (/android/i.test(this.userAgent) && /mobile/i.test(this.userAgent)) : false;
     };
-    // androidPhone method does not support 'all' and 'any' interfaces
-    // public androidPhone.api = ['not'];
 
     // is current device android tablet?
     public androidTablet(): boolean {
-        return /android/i.test(this.userAgent) && !/mobile/i.test(this.userAgent);
+        return typeof window !== void 0 ? (/android/i.test(this.userAgent) && !/mobile/i.test(this.userAgent)) : false;
     };
-    // androidTablet method does not support 'all' and 'any' interfaces
-    // public androidTablet.api = ['not'];
 
     // is current device blackberry?
     public blackberry(): boolean {
-        return /blackberry/i.test(this.userAgent) || /BB10/i.test(this.userAgent);
+        return typeof window !== void 0 ? (/blackberry/i.test(this.userAgent) || /BB10/i.test(this.userAgent)) : false;
     };
-    // blackberry method does not support 'all' and 'any' interfaces
-    // public blackberry.api = ['not'];
 
     // is current device desktop?
     public desktop(): boolean {
-        return this.not.mobile() && this.not.tablet();
+        return typeof window !== void 0 ? (!this.mobile() && !this.tablet()) : false;
     };
-    // desktop method does not support 'all' and 'any' interfaces
-    // public desktop.api = ['not'];
 
     // is current operating system linux?
     public linux(): boolean {
-        return /linux/i.test(this.appVersion);
+        return typeof window !== void 0 ? /linux/i.test(this.appVersion) : false;
     };
-    // linux method does not support 'all' and 'any' interfaces
-    // public linux.api = ['not'];
 
     // is current operating system mac?
     public mac(): boolean {
-        return /mac/i.test(this.appVersion);
+        return typeof window !== void 0 ? /mac/i.test(this.appVersion) : false;
     };
-    // mac method does not support 'all' and 'any' interfaces
-    // public mac.api = ['not'];
 
     // is current operating system windows?
     public windows(): boolean {
-        return /win/i.test(this.appVersion);
+        return typeof window !== void 0 ? /win/i.test(this.appVersion) : false;
     };
-    // windows method does not support 'all' and 'any' interfaces
-    // public windows.api = ['not'];
 
     // is current device windows phone?
     public windowsPhone(): boolean {
-        return this.windows() && /phone/i.test(this.userAgent);
+        return typeof window !== void 0 ? (this.windows() && /phone/i.test(this.userAgent)) : false;
     };
-    // windowsPhone method does not support 'all' and 'any' interfaces
-    // public windowsPhone.api = ['not'];
 
     // is current device windows tablet?
     public windowsTablet(): boolean {
-        return this.windows() && this.not.windowsPhone() && /touch/i.test(this.userAgent);
+        return typeof window !== void 0 ? (this.windows() && !this.windowsPhone() && /touch/i.test(this.userAgent)) : false;
     };
-    // windowsTablet method does not support 'all' and 'any' interfaces
-    // public windowsTablet.api = ['not'];
 
     // is current device mobile?
     public mobile(): boolean {
-        return this.iphone() || this.ipod() || this.androidPhone() || this.blackberry() || this.windowsPhone();
+        return typeof window !== void 0 ? (this.iphone() || this.ipod() || this.androidPhone() || this.blackberry() || this.windowsPhone()) : false;
     };
-    // mobile method does not support 'all' and 'any' interfaces
-    // public mobile.api = ['not'];
 
     // is current device tablet?
     public tablet(): boolean {
-        return this.ipad() || this.androidTablet() || this.windowsTablet();
+        return typeof window !== void 0 ? (this.ipad() || this.androidTablet() || this.windowsTablet()) : false;
     };
-    // tablet method does not support 'all' and 'any' interfaces
-    // public tablet.api = ['not'];
 
     // is current state online?
     public online(): boolean {
-        return navigator.onLine;
+        return typeof window !== void 0 ? navigator.onLine : false;
     };
-    // online method does not support 'all' and 'any' interfaces
-    // public online.api = ['not'];
 
     // is current state offline?
-    public offline = not(is.online);
-    // offline method does not support 'all' and 'any' interfaces
-    // public offline.api = ['not'];
+    public offline(): boolean {
+        return typeof window !== void 0 ? !this.online() : false;
+    };
 
     // is current device supports touch?
     public touchDevice(): boolean {
-        return 'ontouchstart' in window || 'DocumentTouch' in window && document instanceof DocumentTouch;
+        return typeof window !== void 0 ?
+            ('ontouchstart' in window || 'DocumentTouch' in window && document instanceof DocumentTouch) : false;
     };
-    // touchDevice method does not support 'all' and 'any' interfaces
-    // public touchDevice.api = ['not'];
 
 
     // Object checks
@@ -701,7 +662,7 @@ export class Is {
 
     // has a given object got parameterized count property?
     public propertyCount(obj, count): boolean {
-        if (!is.object(obj) || !is.number(count)) {
+        if (!this.object(obj) || !this.number(count)) {
             return false;
         }
         if (Object.keys) {
@@ -743,11 +704,13 @@ export class Is {
 
     // is a given item in an array?
     public inArray(val, arr): boolean {
-        if (this.not.array(arr)) {
+        if (!this.array(arr)) {
             return false;
         }
         for (let i: number = 0; i < arr.length; i++) {
-            if (arr[i] === val) return true;
+            if (arr[i] === val) {
+                return true;
+            }
         }
         return false;
     };
@@ -756,7 +719,7 @@ export class Is {
 
     // is a given array sorted?
     public sorted(arr): boolean {
-        if (this.not.array(arr)) {
+        if (!this.array(arr)) {
             return false;
         }
         for (let i: number = 0; i < arr.length; i++) {
