@@ -23,7 +23,7 @@ Build in bash:
 Strong Type checks
 ===========
 
-```typescript
+```javascript
 
 // Type checks:
 arguments(value: IArguments): boolean
