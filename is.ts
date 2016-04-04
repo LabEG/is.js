@@ -7,57 +7,98 @@
 
 export class Is {
 
-    public VERSION: string = '0.8.0';
+    public VERSION: string = "0.8.0";
 
-    public days: string[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    public days: string[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     public months: string[] = [
-        'january', 'february', 'march',
-        'april', 'may', 'june',
-        'july', 'august', 'september',
-        'october', 'november', 'december'
+        "january", "february", "march",
+        "april", "may", "june",
+        "july", "august", "september",
+        "october", "november", "december"
     ];
 
-    // cache some methods to call later on
-    private toString: () => String = Object.prototype.toString;
-    private arraySlice: (start?: number, end?: number) => any[] = Array.prototype.slice;
-    private hasOwnProperty: (value: string) => boolean = Object.prototype.hasOwnProperty;
-
     // store navigator properties to use later
-    public userAgent: string = 'navigator' in window && 'userAgent' in navigator && navigator.userAgent.toLowerCase() || '';
-    public vendor: string = 'navigator' in window && 'vendor' in navigator && navigator.vendor.toLowerCase() || '';
-    public appVersion: string = 'navigator' in window && 'appVersion' in navigator && navigator.appVersion.toLowerCase() || '';
+    public userAgent: string = "navigator" in window && "userAgent" in navigator && navigator.userAgent.toLowerCase() || "";
+    public vendor: string = "navigator" in window && "vendor" in navigator && navigator.vendor.toLowerCase() || "";
+    public appVersion: string = "navigator" in window && "appVersion" in navigator && navigator.appVersion.toLowerCase() || "";
+
+    // eppPhone match extensible provisioning protocol format
+    // nanpPhone match north american number plan format
+    // dateString match m/d/yy and mm/dd/yyyy,
+    // allowing any combination of one or two digits for the day and month, and two or four digits for the year
+    // time match hours, minutes, and seconds, 24-hour clock
+    public regexps: {
+        url: RegExp,
+        email: RegExp,
+        creditCard: RegExp,
+        alphaNumeric: RegExp,
+        timeString: RegExp,
+        dateString: RegExp,
+        usZipCode: RegExp,
+        caPostalCode: RegExp,
+        ukPostCode: RegExp,
+        nanpPhone: RegExp,
+        eppPhone: RegExp,
+        socialSecurityNumber: RegExp,
+        affirmative: RegExp,
+        hexadecimal: RegExp,
+        hexColor: RegExp,
+        ipv4: RegExp,
+        ipv6: RegExp,
+        ip: RegExp,
+        [key: string]: RegExp
+    } = {
+        url: /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/i,
+        email: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i,
+        creditCard: /^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$/,
+        alphaNumeric: /^[A-Za-z0-9]+$/,
+        timeString: /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$/,
+        dateString: /^(1[0-2]|0?[1-9])\/(3[01]|[12][0-9]|0?[1-9])\/(?:[0-9]{2})?[0-9]{2}$/,
+        usZipCode: /^[0-9]{5}(?:-[0-9]{4})?$/,
+        caPostalCode: /^(?!.*[DFIOQU])[A-VXY][0-9][A-Z]\s?[0-9][A-Z][0-9]$/,
+        ukPostCode: /^[A-Z]{1,2}[0-9RCHNQ][0-9A-Z]?\s?[0-9][ABD-HJLNP-UW-Z]{2}$|^[A-Z]{2}-?[0-9]{4}$/,
+        nanpPhone: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
+        eppPhone: /^\+[0-9]{1,3}\.[0-9]{4,14}(?:x.+)?$/,
+        socialSecurityNumber: /^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$/,
+        affirmative: /^(?:1|t(?:rue)?|y(?:es)?|ok(?:ay)?)$/,
+        hexadecimal: /^[0-9a-fA-F]+$/,
+        hexColor: /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/,
+        ipv4: /^(?:(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/,
+        ipv6: /^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/,
+        ip: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/
+    };
 
     // Type checks
     /* -------------------------------------------------------------------------- */
 
     // is a given value Arguments?
-    public arguments(value): boolean {    // fallback check is for IE
-        return !this.null(value) && (toString.call(value) === '[object Arguments]' || (typeof value === 'object' && 'callee' in value));
+    public arguments(value: IArguments): boolean {    // fallback check is for IE
+        return !this.null(value) && (toString.call(value) === "[object Arguments]" || (typeof value === "object" && "callee" in value));
     };
 
     // is a given value Array?
-    public array(value): boolean {    // check native isArray first
-        return Array.isArray ? Array.isArray(value) : toString.call(value) === '[object Array]';
+    public array(value: Array<any>): boolean {    // check native isArray first
+        return Array.isArray ? Array.isArray(value) : toString.call(value) === "[object Array]";
     };
 
     // is a given value Boolean?
-    public boolean(value): boolean {
-        return value === true || value === false || toString.call(value) === '[object Boolean]';
+    public boolean(value: boolean): boolean {
+        return value === true || value === false || toString.call(value) === "[object Boolean]";
     };
 
     // is a given value Date Object?
-    public date(value): boolean {
-        return toString.call(value) === '[object Date]';
+    public date(value: Date): boolean {
+        return toString.call(value) === "[object Date]";
     };
 
     // is a given value Error object?
     public error(value: Error): boolean {
-        return toString.call(value) === '[object Error]';
+        return toString.call(value) === "[object Error]";
     };
 
     // is a given value function?
     public function(value: Function): boolean {    // fallback check is for IE
-        return toString.call(value) === '[object Function]' || typeof value === 'function';
+        return toString.call(value) === "[object Function]" || typeof value === "function";
     };
 
     // is a given value NaN?
@@ -71,29 +112,29 @@ export class Is {
     };
 
     // is a given value number?
-    public number(value): boolean {
-        return !this.nan(value) && toString.call(value) === '[object Number]';
+    public number(value: number): boolean {
+        return !this.nan(value) && toString.call(value) === "[object Number]";
     };
 
     // is a given value object?
-    public object(value): boolean {
+    public object(value: Object): boolean {
         const type: string = typeof value;
-        return type === 'function' || type === 'object' && !!value;
+        return type === "function" || type === "object" && !!value;
     };
 
     // is given value a pure JSON object?
-    public json(value): boolean {
-        return toString.call(value) === '[object Object]';
+    public json(value: Object): boolean {
+        return toString.call(value) === "[object Object]";
     };
 
     // is a given value RegExp?
-    public regexp(value): boolean {
-        return toString.call(value) === '[object RegExp]';
+    public regexp(value: RegExp): boolean {
+        return toString.call(value) === "[object RegExp]";
     };
 
     // are given values same type?
     // prevent NaN, Number same type check
-    public sameType(value1, value2): boolean {
+    public sameType(value1: any, value2: any): boolean {
         if (this.nan(value1) || this.nan(value2)) {
             return this.nan(value1) === this.nan(value2);
         }
@@ -101,17 +142,17 @@ export class Is {
     };
 
     // is a given value String?
-    public string(value): boolean {
-        return toString.call(value) === '[object String]';
+    public string(value: string): boolean {
+        return toString.call(value) === "[object String]";
     };
 
     // is a given value Char?
-    public char(value): boolean {
+    public char(value: string): boolean {
         return this.string(value) && value.length === 1;
     };
 
     // is a given value undefined?
-    public undefined(value): boolean {
+    public undefined(value: any): boolean {
         return value === void 0;
     };
 
@@ -119,8 +160,8 @@ export class Is {
     // Presence checks
     /* -------------------------------------------------------------------------- */
 
-    //is a given value empty? Objects, arrays, strings
-    public empty(value): boolean {
+    // is a given value empty? Objects, arrays, strings
+    public empty(value: any): boolean {
         if (this.object(value)) {
             const num: number = Object.getOwnPropertyNames(value).length;
             if (num === 0 || (num === 1 && this.array(value)) || (num === 2 && this.arguments(value))) {
@@ -128,28 +169,28 @@ export class Is {
             }
             return false;
         } else {
-            return value === '';
+            return value === "";
         }
     };
 
     // is a given value existy?
-    public existy(value): boolean {
+    public existy(value: any): boolean {
         return value !== null && value !== undefined;
     };
 
     // is a given value truthy?
-    public truthy(value): boolean {
+    public truthy(value: any): boolean {
         return this.existy(value) && value !== false && !this.nan(value) && value !== "" && value !== 0;
     };
 
     // is a given value falsy?
-    public falsy(value): boolean {
+    public falsy(value: any): boolean {
         return this.truthy(value);
     };
 
     // is a given value space?
     // horizantal tab: 9, line feed: 10, vertical tab: 11, form feed: 12, carriage return: 13, space: 32
-    public space(value): boolean {
+    public space(value: string): boolean {
         if (this.char(value)) {
             const characterCode: number = value.charCodeAt(0);
             return (characterCode > 8 && characterCode < 14) || characterCode === 32;
@@ -171,7 +212,7 @@ export class Is {
         }
         // check regexps as strings too
         if (this.all.string(value1, value2) || this.all.regexp(value1, value2)) {
-            return '' + value1 === '' + value2;
+            return "" + value1 === "" + value2;
         }
         if (this.all.boolean(value1, value2)) {
             return value1 === value2;
@@ -180,57 +221,57 @@ export class Is {
     };
 
     // is a given number even?
-    public even(numb): boolean {
+    public even(numb: number): boolean {
         return this.number(numb) && numb % 2 === 0;
     };
 
     // is a given number odd?
-    public odd(numb): boolean {
+    public odd(numb: number): boolean {
         return this.number(numb) && numb % 2 === 1;
     };
 
     // is a given number positive?
-    public positive(numb): boolean {
+    public positive(numb: number): boolean {
         return this.number(numb) && numb > 0;
     };
 
     // is a given number negative?
-    public negative(numb): boolean {
+    public negative(numb: number): boolean {
         return this.number(numb) && numb < 0;
     };
 
     // is a given number above minimum parameter?
-    public above(numb, min): boolean {
+    public above(numb: number, min: number): boolean {
         return this.all.number(numb, min) && numb > min;
     };
 
     // is a given number above maximum parameter?
-    public under(numb, max): boolean {
+    public under(numb: number, max: number): boolean {
         return this.all.number(numb, max) && numb < max;
     };
 
     // is a given number within minimum and maximum parameters?
-    public within(numb, min, max): boolean {
+    public within(numb: number, min: number, max: number): boolean {
         return this.all.number(numb, min, max) && numb > min && numb < max;
     };
 
     // is a given number decimal?
-    public decimal(numb): boolean {
+    public decimal(numb: number): boolean {
         return this.number(numb) && numb % 1 !== 0;
     };
 
     // is a given number integer?
-    public integer(numb): boolean {
+    public integer(numb: number): boolean {
         return this.number(numb) && numb % 1 === 0;
     };
 
     // is a given number finite?
-    public finite(numb): boolean {
+    public finite(numb: number): boolean {
         return isFinite ? isFinite(numb) : numb !== Infinity && numb !== -Infinity && !this.nan(numb);
     };
 
     // is a given number infinite?
-    public infinite(numb): boolean {
+    public infinite(numb: number): boolean {
         return this.finite(numb);
     };
 
@@ -239,31 +280,6 @@ export class Is {
     /* -------------------------------------------------------------------------- */
     // Steven Levithan, Jan Goyvaerts: Regular Expressions Cookbook
     // Scott Gonzalez: Email address validation
-
-    // eppPhone match extensible provisioning protocol format
-    // nanpPhone match north american number plan format
-    // dateString match m/d/yy and mm/dd/yyyy, allowing any combination of one or two digits for the day and month, and two or four digits for the year
-    // time match hours, minutes, and seconds, 24-hour clock
-    public regexps = {
-        url: /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/i,
-        email: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i,
-        creditCard: /^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$/,
-        alphaNumeric: /^[A-Za-z0-9]+$/,
-        timeString: /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$/,
-        dateString: /^(1[0-2]|0?[1-9])\/(3[01]|[12][0-9]|0?[1-9])\/(?:[0-9]{2})?[0-9]{2}$/,
-        usZipCode: /^[0-9]{5}(?:-[0-9]{4})?$/,
-        caPostalCode: /^(?!.*[DFIOQU])[A-VXY][0-9][A-Z]\s?[0-9][A-Z][0-9]$/,
-        ukPostCode: /^[A-Z]{1,2}[0-9RCHNQ][0-9A-Z]?\s?[0-9][ABD-HJLNP-UW-Z]{2}$|^[A-Z]{2}-?[0-9]{4}$/,
-        nanpPhone: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-        eppPhone: /^\+[0-9]{1,3}\.[0-9]{4,14}(?:x.+)?$/,
-        socialSecurityNumber: /^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$/,
-        affirmative: /^(?:1|t(?:rue)?|y(?:es)?|ok(?:ay)?)$/,
-        hexadecimal: /^[0-9a-fA-F]+$/,
-        hexColor: /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/,
-        ipv4: /^(?:(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/,
-        ipv6: /^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/,
-        ip: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/
-    };
 
     public url(value: string): boolean {
         return this.regexps.url.test(value);
@@ -342,52 +358,46 @@ export class Is {
     /* -------------------------------------------------------------------------- */
 
     // is a given string include parameter substring?
-    public include(str, substr): boolean {
+    public include(str: string, substr: string): boolean {
         return str.indexOf(substr) > -1;
     };
-    // include method does not support 'all' and 'any' interfaces
-    // public include.api = ['not'];
 
     // is a given string all uppercase?
-    public upperCase(str): boolean {
+    public upperCase(str: string): boolean {
         return this.string(str) && str === str.toUpperCase();
     };
 
     // is a given string all lowercase?
-    public lowerCase(str): boolean {
+    public lowerCase(str: string): boolean {
         return this.string(str) && str === str.toLowerCase();
     };
 
     // is string start with a given startWith parameter?
-    public startWith(str, startWith): boolean {
+    public startWith(str: string, startWith: string): boolean {
         return this.string(str) && str.indexOf(startWith) === 0;
     };
-    // startWith method does not support 'all' and 'any' interfaces
-    // public startWith.api = ['not'];
 
     // is string end with a given endWith parameter?
-    public endWith(str, endWith): boolean {
+    public endWith(str: string, endWith: string): boolean {
         return this.string(str) && str.indexOf(endWith) > -1 && str.indexOf(endWith) === str.length - endWith.length;
     };
-    // endWith method does not support 'all' and 'any' interfaces
-    // public endWith.api = ['not'];
 
     // is a given string or sentence capitalized?
-    public capitalized(str): boolean {
+    public capitalized(str: string): boolean {
         if (!this.string(str)) {
             return false;
         }
-        const words: string[] = str.split(' ');
+        const words: string[] = str.split(" ");
         const capitalized: boolean[] = [];
-        for (let i = 0; i < words.length; i++) {
+        for (let i: number = 0; i < words.length; i++) {
             capitalized.push(words[i][0] === words[i][0].toUpperCase());
         }
         return this.all.truthy.apply(null, capitalized);
     };
 
     // is a given string palindrome?
-    public palindrome(str): boolean {
-        return this.string(str) && str == str.split('').reverse().join('');
+    public palindrome(str: string): boolean {
+        return this.string(str) && str === str.split("").reverse().join("");
     };
 
 
@@ -403,21 +413,21 @@ export class Is {
 
     // is a given date indicate yesterday?
     public yesterday(obj: Date): boolean {
-        const now = new Date();
-        const yesterdayString = new Date(now.setDate(now.getDate() - 1)).toDateString();
+        const now: Date = new Date();
+        const yesterdayString: string = new Date(now.setDate(now.getDate() - 1)).toDateString();
         return this.date(obj) && obj.toDateString() === yesterdayString;
     };
 
     // is a given date indicate tomorrow?
     public tomorrow(obj: Date): boolean {
-        const now = new Date();
-        const tomorrowString = new Date(now.setDate(now.getDate() + 1)).toDateString();
+        const now: Date = new Date();
+        const tomorrowString: string = new Date(now.setDate(now.getDate() + 1)).toDateString();
         return this.date(obj) && obj.toDateString() === tomorrowString;
     };
 
     // is a given date past?
     public past(obj: Date): boolean {
-        const now = new Date();
+        const now: Date = new Date();
         return this.date(obj) && obj.getTime() < now.getTime();
     };
 
@@ -467,8 +477,6 @@ export class Is {
         const end: number = endObj.getTime();
         return givenDate > start && givenDate < end;
     };
-    // inDateRange method does not support 'all' and 'any' interfaces
-    // public inDateRange.api = ['not'];
 
     // is a given date in last week range?
     public inLastWeek(obj: Date): boolean {
@@ -504,8 +512,6 @@ export class Is {
     public quarterOfYear(obj: Date, quarterNumber: number): boolean {
         return this.date(obj) && this.number(quarterNumber) && quarterNumber === Math.floor((obj.getMonth() + 3) / 3);
     };
-    // quarterOfYear method does not support 'all' and 'any' interfaces
-    // public quarterOfYear.api = ['not'];
 
     // is a given date in daylight saving time?
     public publicdayLightSavingTime(obj: Date): boolean {
@@ -546,7 +552,7 @@ export class Is {
         if (version >= 11) {
             return "ActiveXObject" in window;
         }
-        return new RegExp('msie ' + version).test(this.userAgent);
+        return new RegExp("msie " + version).test(this.userAgent);
     };
 
     // is current browser opera?
@@ -557,7 +563,7 @@ export class Is {
 
     // is current browser safari?
     public safari(): boolean {
-        return typeof window !== void 0 ? (/safari/i.test(this.userAgent) && /apple computer/i.test(this.vendor)) : false;;
+        return typeof window !== void 0 ? (/safari/i.test(this.userAgent) && /apple computer/i.test(this.vendor)) : false;
     };
 
     // is current device ios?
@@ -632,7 +638,8 @@ export class Is {
 
     // is current device mobile?
     public mobile(): boolean {
-        return typeof window !== void 0 ? (this.iphone() || this.ipod() || this.androidPhone() || this.blackberry() || this.windowsPhone()) : false;
+        return typeof window !== void 0 ?
+            (this.iphone() || this.ipod() || this.androidPhone() || this.blackberry() || this.windowsPhone()) : false;
     };
 
     // is current device tablet?
@@ -653,7 +660,7 @@ export class Is {
     // is current device supports touch?
     public touchDevice(): boolean {
         return typeof window !== void 0 ?
-            ('ontouchstart' in window || 'DocumentTouch' in window && document instanceof DocumentTouch) : false;
+            ("ontouchstart" in window || "DocumentTouch" in window && document instanceof DocumentTouch) : false;
     };
 
 
@@ -661,40 +668,36 @@ export class Is {
     /* -------------------------------------------------------------------------- */
 
     // has a given object got parameterized count property?
-    public propertyCount(obj, count): boolean {
+    public propertyCount(obj: Object, count: number): boolean {
         if (!this.object(obj) || !this.number(count)) {
             return false;
         }
         if (Object.keys) {
             return Object.keys(obj).length === count;
         }
-        const properties = [],
-            property;
+        const properties: string[] = [];
+        let property: string;
         for (property in obj) {
-            if (hasOwnProperty.call(obj, property)) {
+            if (window.hasOwnProperty.call(obj, property)) {
                 properties.push(property);
             }
         }
         return properties.length === count;
     };
-    // propertyCount method does not support 'all' and 'any' interfaces
-    // public propertyCount.api = ['not'];
 
     // is given object has parameterized property?
-    public propertyDefined(obj, property): boolean {
+    public propertyDefined(obj: Object, property: string): boolean {
         return this.object(obj) && this.string(property) && property in obj;
     };
-    // propertyDefined method does not support 'all' and 'any' interfaces
-    // public propertyDefined.api = ['not'];
 
     // is a given object window?
     // setInterval method is only available for window object
-    public windowObject(obj): boolean {
-        return typeof obj === 'object' && 'setInterval' in obj;
+    public windowObject(obj: Object): boolean {
+        return typeof obj === "object" && "setInterval" in obj;
     };
 
     // is a given object a DOM node?
-    public domNode(obj): boolean {
+    public domNode(obj: HTMLElement): boolean {
         return this.object(obj) && obj.nodeType > 0;
     };
 
@@ -703,7 +706,7 @@ export class Is {
     /* -------------------------------------------------------------------------- */
 
     // is a given item in an array?
-    public inArray(val, arr): boolean {
+    public inArray<T>(val: T, arr: Array<T>): boolean {
         if (!this.array(arr)) {
             return false;
         }
@@ -714,11 +717,9 @@ export class Is {
         }
         return false;
     };
-    // inArray method does not support 'all' and 'any' interfaces
-    // public inArray.api = ['not'];
 
     // is a given array sorted?
-    public sorted(arr): boolean {
+    public sorted(arr: Array<any>): boolean {
         if (!this.array(arr)) {
             return false;
         }
@@ -737,7 +738,7 @@ export class Is {
     // set optional regexps to methods if you think they suck
     public setRegexp(regexp: RegExp, regexpName: string): void {
         for (const r in this.regexps) {
-            if (this.regexps.hasOwnProperty.call(this.regexps, r) && (regexpName === r)) {
+            if (window.hasOwnProperty.call(this.regexps, r) && (regexpName === r)) {
                 this.regexps[r] = regexp;
             }
         }
