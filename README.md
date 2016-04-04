@@ -26,131 +26,131 @@ Strong Type checks
 ```typescript
 
 // Type checks:
-arguments(value: IArguments): boolean
-array(value: Array<any>): boolean
-boolean(value: boolean): boolean
-date(value: Date): boolean
-error(value: Error): boolean
-function(value: Function): boolean
-nan(value: any): boolean
-null(value: any): boolean
-number(value: number): boolean
-object(value: Object): boolean
-json(value: Object): boolean
-regexp(value: RegExp): boolean
-sameType(value1: any, value2: any): boolean
-string(value: string): boolean
-char(value: string): boolean
-undefined(value: any): boolean
+is.arguments(value: IArguments): boolean
+is.array(value: Array<any>): boolean
+is.boolean(value: boolean): boolean
+is.date(value: Date): boolean
+is.error(value: Error): boolean
+is.function(value: Function): boolean
+is.nan(value: any): boolean
+is.null(value: any): boolean
+is.number(value: number): boolean
+is.object(value: Object): boolean
+is.json(value: Object): boolean
+is.regexp(value: RegExp): boolean
+is.sameType(value1: any, value2: any): boolean
+is.string(value: string): boolean
+is.char(value: string): boolean
+is.undefined(value: any): boolean
 
 // Presence checks:
-empty(value: any): boolean
-existy(value: any): boolean
-truthy(value: any): boolean
-falsy(value: any): boolean
-space(value: string): boolean
+is.empty(value: any): boolean
+is.existy(value: any): boolean
+is.truthy(value: any): boolean
+is.falsy(value: any): boolean
+is.space(value: string): boolean
 
 // Arithmetic checks:
-equal(value1, value2): boolean
-even(numb: number): boolean
-odd(numb: number): boolean
-positive(numb: number): boolean
-negative(numb: number): boolean
-above(numb: number, min: number): boolean
-under(numb: number, max: number): boolean
-within(numb: number, min: number, max: number): boolean
-decimal(numb: number): boolean
-integer(numb: number): boolean
-finite(numb: number): boolean
-infinite(numb: number): boolean
+is.equal(value1, value2): boolean
+is.even(numb: number): boolean
+is.odd(numb: number): boolean
+is.positive(numb: number): boolean
+is.negative(numb: number): boolean
+is.above(numb: number, min: number): boolean
+is.under(numb: number, max: number): boolean
+is.within(numb: number, min: number, max: number): boolean
+is.decimal(numb: number): boolean
+is.integer(numb: number): boolean
+is.finite(numb: number): boolean
+is.infinite(numb: number): boolean
 
 // Regexp checks:
-url(value: string): boolean
-email(value: string): boolean
-creditCard(value: string): boolean
-alphaNumeric(value: string): boolean
-timeString(value: string): boolean
-dateString(value: string): boolean
-usZipCode(value: string): boolean
-caPostalCode(value: string): boolean
-ukPostCode(value: string): boolean
-nanpPhone(value: string): boolean
-eppPhone(value: string): boolean
-socialSecurityNumber(value: string): boolean
-affirmative(value: string): boolean
-hexadecimal(value: string): boolean
-hexColor(value: string): boolean
-ipv4(value: string): boolean
-ipv6(value: string): boolean
-ip(value: string): boolean
+is.url(value: string): boolean
+is.email(value: string): boolean
+is.creditCard(value: string): boolean
+is.alphaNumeric(value: string): boolean
+is.timeString(value: string): boolean
+is.dateString(value: string): boolean
+is.usZipCode(value: string): boolean
+is.caPostalCode(value: string): boolean
+is.ukPostCode(value: string): boolean
+is.nanpPhone(value: string): boolean
+is.eppPhone(value: string): boolean
+is.socialSecurityNumber(value: string): boolean
+is.affirmative(value: string): boolean
+is.hexadecimal(value: string): boolean
+is.hexColor(value: string): boolean
+is.ipv4(value: string): boolean
+is.ipv6(value: string): boolean
+is.ip(value: string): boolean
 
 // String checks:
-include(str: string, substr: string): boolean
-upperCase(str: string): boolean
-lowerCase(str: string): boolean
-startWith(str: string, startWith: string): boolean
-endWith(str: string, endWith: string): boolean
-capitalized(str: string): boolean
-palindrome(str: string): boolean
+is.include(str: string, substr: string): boolean
+is.upperCase(str: string): boolean
+is.lowerCase(str: string): boolean
+is.startWith(str: string, startWith: string): boolean
+is.endWith(str: string, endWith: string): boolean
+is.capitalized(str: string): boolean
+is.palindrome(str: string): boolean
 
 // Time checks:
-today(obj: Date): boolean
-yesterday(obj: Date): boolean
-tomorrow(obj: Date): boolean
-past(obj: Date): boolean
-future(obj: Date): boolean
-day(obj: Date, dayString): boolean
-month(obj: Date, monthString): boolean
-year(obj: Date, year: number): boolean
-leapYear(year: number): boolean
-weekend(obj: Date): boolean
-weekday(obj: Date): boolean
-inDateRange(obj: Date, startObj: Date, endObj: Date): boolean
-inLastWeek(obj: Date): boolean
-inLastMonth(obj: Date): boolean
-inLastYear(obj: Date): boolean
-inNextWeek(obj: Date): boolean
-inNextMonth(obj: Date): boolean
-inNextYear(obj: Date): boolean
-quarterOfYear(obj: Date, quarterNumber: number): boolean
-publicdayLightSavingTime(obj: Date): boolean
+is.today(obj: Date): boolean
+is.yesterday(obj: Date): boolean
+is.tomorrow(obj: Date): boolean
+is.past(obj: Date): boolean
+is.future(obj: Date): boolean
+is.day(obj: Date, dayString): boolean
+is.month(obj: Date, monthString): boolean
+is.year(obj: Date, year: number): boolean
+is.leapYear(year: number): boolean
+is.weekend(obj: Date): boolean
+is.weekday(obj: Date): boolean
+is.inDateRange(obj: Date, startObj: Date, endObj: Date): boolean
+is.inLastWeek(obj: Date): boolean
+is.inLastMonth(obj: Date): boolean
+is.inLastYear(obj: Date): boolean
+is.inNextWeek(obj: Date): boolean
+is.inNextMonth(obj: Date): boolean
+is.inNextYear(obj: Date): boolean
+is.quarterOfYear(obj: Date, quarterNumber: number): boolean
+is.publicdayLightSavingTime(obj: Date): boolean
 
 // Environment checks
-chrome(): boolean
-firefox(): boolean
-edge(): boolean
-ie(version?: number): boolean
-opera(): boolean
-safari(): boolean
-ios(): boolean
-iphone(): boolean
-ipad(): boolean
-ipod(): boolean
-android(): boolean
-androidPhone(): boolean
-androidTablet(): boolean
-blackberry(): boolean
-desktop(): boolean
-linux(): boolean
-mac(): boolean
-windows(): boolean
-windowsPhone(): boolean
-windowsTablet(): boolean
-mobile(): boolean
-tablet(): boolean
-online(): boolean
-offline(): boolean
-touchDevice(): boolean
+is.chrome(): boolean
+is.firefox(): boolean
+is.edge(): boolean
+is.ie(version?: number): boolean
+is.opera(): boolean
+is.safari(): boolean
+is.ios(): boolean
+is.iphone(): boolean
+is.ipad(): boolean
+is.ipod(): boolean
+is.android(): boolean
+is.androidPhone(): boolean
+is.androidTablet(): boolean
+is.blackberry(): boolean
+is.desktop(): boolean
+is.linux(): boolean
+is.mac(): boolean
+is.windows(): boolean
+is.windowsPhone(): boolean
+is.windowsTablet(): boolean
+is.mobile(): boolean
+is.tablet(): boolean
+is.online(): boolean
+is.offline(): boolean
+is.touchDevice(): boolean
 
 // Object checks
-propertyCount(obj: Object, count: number): boolean
-propertyDefined(obj: Object, property: string): boolean
-windowObject(obj: Object): boolean
-domNode(obj: HTMLElement): boolean
+is.propertyCount(obj: Object, count: number): boolean
+is.propertyDefined(obj: Object, property: string): boolean
+is.windowObject(obj: Object): boolean
+is.domNode(obj: HTMLElement): boolean
 
 // Array checks
-inArray<T>(val: T, arr: Array<T>): boolean
-sorted(arr: Array<any>): boolean
-setRegexp(regexp: RegExp, regexpName: string): void
+is.inArray<T>(val: T, arr: Array<T>): boolean
+is.sorted(arr: Array<any>): boolean
+is.setRegexp(regexp: RegExp, regexpName: string): void
 
 ```
