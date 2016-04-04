@@ -1318,6 +1318,6 @@ interface Is extends IsStatic {
 
 declare var is: Is;
 
-declare module 'is' {
+declare module 'is_ts' {
     export = is;
 }

@@ -2,7 +2,6 @@
   "name": "is_ts",
   "version": "0.8.0",
   "main": "./is.js",
-  "typings": "./is.d.ts",
   "license": "MIT",
   "description": "micro check library on typescript",
   "repository": {
