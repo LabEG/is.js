@@ -41,9 +41,9 @@ class User {
 
     constructor(name?: string, age?: number, weight?: number) {
 
-        this.name = name !== void 0 ? name : "Empty Name";
-        this.age = age !== void 0 ? age : 0;
-        this.weight = weight !== void 0 ? weight : 0;
+        this.name = is.string(name) ? name : "Empty Name";
+        this.age = is.number(age) ? age : 0;
+        this.weight = is.number(weight) ? weight : 0;
 
         this.sex = null;
         this.identifier = null;
