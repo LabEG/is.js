@@ -20,6 +20,89 @@ Build in bash:
 ./build.sh
 ```
 
+For Whats?
+===========
+Is.js it guarantees that the object will be correctly deserialized and your application logic will not break in a random position due to error in the object
+
+Example:
+```typescript
+
+import {is} from "is_ts";
+
+class User {
+
+    public name: string;
+    public age: number;
+    public weight: number;
+
+    public sex: number;
+
+    public identifier: string;
+
+    constructor(name?: string, age?: number, weight?: number) {
+
+        this.name = name !== void 0 ? name : "Empty Name";
+        this.age = age !== void 0 ? age : 0;
+        this.weight = weight !== void 0 ? weight : 0;
+
+        this.sex = null;
+        this.identifier = null;
+
+    }
+
+    // `object` is not deserialized now, and can by any objectsб
+    // we only expect it needs to be User
+    public deserialize(object: User): User {
+
+        // not important logic we can replace by default value, and hide error from users
+        this.name = is.string(object.name) ? object.name : this.name;
+        this.age = is.number(object.age) ? object.age : this.age;
+        this.weight = is.number(object.weight) ? object.weight : this.weight;
+
+        // nullable types must by checked individualy
+        this.weight = is.number(object.sex) || is.null(object.sex) ? object.sex : this.sex;
+
+        // on important logic we must drop exception and prevent work of programm
+        this.identifier = is.string(object.identifier) ? object.identifier :
+            dropException("User.deserialize: error on deserializaion, propertie identifier is not a String");
+
+        return this;
+
+    }
+
+    public goForward(): this {
+        // logic
+        return this;
+    }
+
+    public goBackward(): this {
+        // logic
+        return this;
+    }
+
+}
+
+window.fetch("./user")
+    .then((response: Response) => response.json())
+
+    // you are think that is must by User, but this is maybe and wrong object,
+    // example after change API on backend 
+    .then((objects: User) => {
+        // objects.goForward() -- if call any method of User will by error: method not found,
+        // for calls method object must by correct deseialized
+        return new User().deserialize(objects);
+    })
+
+    .catch((error: Error) => console.log("Error on user request: ", error));
+
+function dropException(text: string): any {
+    'use strict';
+    throw new Error(text);
+}
+
+```
+
+
 Strong Type checks
 ===========
 
