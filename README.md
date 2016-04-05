@@ -50,7 +50,7 @@ class User {
 
     }
 
-    // `object` is not deserialized now, and can by any objectsб
+    // `object` is not deserialized now, and can by any objects,
     // we only expect it needs to be User
     public deserialize(object: User): User {
 
@@ -89,10 +89,10 @@ window.fetch("./user")
     // example after change API on backend 
     .then((objects: User) => {
         // objects.goForward() -- if call any method of User will by error: method not found,
-        // for calls method object must by correct deseialized
+        // for calls method object must by correct deserialized
         return new User().deserialize(objects);
     })
-
+    .then(() => //app logic)
     .catch((error: Error) => console.log("Error on user request: ", error));
 
 function dropException(text: string): any {
