@@ -20,7 +20,7 @@ Build in bash:
 ./build.sh
 ```
 
-For Whats?
+For What?
 ===========
 Is.js it guarantees that the object will be correctly deserialized and your application logic will not break in a random position due to error in the object
 
