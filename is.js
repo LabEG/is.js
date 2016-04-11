@@ -81,14 +81,38 @@ var Is = (function () {
         return value !== value;
     };
     ;
-    // is a given value null?
+    /**
+     * @description Is a given value null?
+     *
+     * Valid:
+     * null
+     *
+     * Invalid:
+     * "test", 5, {test}
+     *
+     *
+     * @param {*} value Value for check
+     * @returns {boolean} Result of check
+     */
     Is.prototype.null = function (value) {
         return value === null;
     };
     ;
-    // is a given value number?
+    /**
+     * @description Is a given value number?
+     *
+     * Valid:
+     * 5, 0.1, Number(5), new Number(5)
+     *
+     * Invalid:
+     * "5", null
+     *
+     *
+     * @param {number | Number} value Value for check
+     * @returns {boolean} Result of check
+     */
     Is.prototype.number = function (value) {
-        return !this.nan(value) && toString.call(value) === "[object Number]";
+        return typeof value === "string" || value instanceof Number;
     };
     ;
     // is a given value object?
@@ -116,9 +140,21 @@ var Is = (function () {
         return toString.call(value1) === toString.call(value2);
     };
     ;
-    // is a given value String?
+    /**
+     * @description Is a given value String?
+     *
+     * Valid:
+     * "text", "123", String("text"), new String("text")
+     *
+     * Invalid:
+     * 5, null, void 0
+     *
+     *
+     * @param {string | String} value Value for check
+     * @returns {boolean} Result of check
+     */
     Is.prototype.string = function (value) {
-        return toString.call(value) === "[object String]";
+        return typeof value === "string" || value instanceof String;
     };
     ;
     // is a given value Char?

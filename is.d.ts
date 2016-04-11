@@ -33,13 +33,52 @@ export declare class Is {
     error(value: Error): boolean;
     function(value: Function): boolean;
     nan(value: any): boolean;
+    /**
+     * @description Is a given value null?
+     *
+     * Valid:
+     * null
+     *
+     * Invalid:
+     * "test", 5, {test}
+     *
+     *
+     * @param {*} value Value for check
+     * @returns {boolean} Result of check
+     */
     null(value: any): boolean;
-    number(value: number): boolean;
+    /**
+     * @description Is a given value number?
+     *
+     * Valid:
+     * 5, 0.1, Number(5), new Number(5)
+     *
+     * Invalid:
+     * "5", null
+     *
+     *
+     * @param {number | Number} value Value for check
+     * @returns {boolean} Result of check
+     */
+    number(value: number | Number): boolean;
     object(value: Object): boolean;
     json(value: Object): boolean;
     regexp(value: RegExp): boolean;
     sameType(value1: any, value2: any): boolean;
-    string(value: string): boolean;
+    /**
+     * @description Is a given value String?
+     *
+     * Valid:
+     * "text", "123", String("text"), new String("text")
+     *
+     * Invalid:
+     * 5, null, void 0
+     *
+     *
+     * @param {string | String} value Value for check
+     * @returns {boolean} Result of check
+     */
+    string(value: string | String): boolean;
     char(value: string): boolean;
     undefined(value: any): boolean;
     empty(value: any): boolean;
