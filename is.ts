@@ -106,14 +106,38 @@ export class Is {
         return value !== value;
     };
 
-    // is a given value null?
+    /**
+     * @description Is a given value null?
+     * 
+     * Valid:
+     * null
+     * 
+     * Invalid:
+     * "test", 5, {test}
+     * 
+     * 
+     * @param {*} value Value for check
+     * @returns {boolean} Result of check
+     */
     public null(value: any): boolean {
         return value === null;
     };
 
-    // is a given value number?
-    public number(value: number): boolean {
-        return !this.nan(value) && toString.call(value) === "[object Number]";
+    /**
+     * @description Is a given value number?
+     * 
+     * Valid:
+     * 5, 0.1, Number(5), new Number(5)
+     * 
+     * Invalid:
+     * "5", null
+     * 
+     *  
+     * @param {number | Number} value Value for check
+     * @returns {boolean} Result of check
+     */
+    public number(value: number | Number): boolean {
+        return typeof value === "string" || value instanceof Number;
     };
 
     // is a given value object?
@@ -141,9 +165,21 @@ export class Is {
         return toString.call(value1) === toString.call(value2);
     };
 
-    // is a given value String?
-    public string(value: string): boolean {
-        return toString.call(value) === "[object String]";
+    /**
+     * @description Is a given value String?
+     * 
+     * Valid:
+     * "text", "123", String("text"), new String("text")
+     * 
+     * Invalid:
+     * 5, null, void 0
+     * 
+     * 
+     * @param {string | String} value Value for check
+     * @returns {boolean} Result of check
+     */
+    public string(value: string | String): boolean {
+        return typeof value === "string" || value instanceof String;
     };
 
     // is a given value Char?
