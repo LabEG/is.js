@@ -1,12 +1,20 @@
-// is.js 0.8.0
-// Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
-// Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
+/**
+ * is.ts 0.8.4
+ * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
+ * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
+ *
+ * PS: The library is strive to be light and fast. So she uses the latest standart ES5.
+ * But old browsers don't support the ES5 standard. And therefore, such functions as is.array,
+ * is.every and others will not work in old browsers. If you need enable support for old browsers
+ * you need enable polyfills in your project. This is the most rational way of using resources, speed and memory.
+ *
+ */
 "use strict";
 // Baseline
 /* -------------------------------------------------------------------------- */
 var Is = (function () {
     function Is() {
-        this.VERSION = "0.8.0";
+        this.VERSION = "0.8.4";
         this.days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
         this.months = [
             "january", "february", "march",
@@ -53,7 +61,12 @@ var Is = (function () {
     ;
     // is a given value Array?
     Is.prototype.array = function (value) {
-        return Array.isArray ? Array.isArray(value) : toString.call(value) === "[object Array]";
+        return Array.isArray(value);
+    };
+    ;
+    // is a given value Array or Null?
+    Is.prototype.arrayOrNull = function (value) {
+        return this.array(value) || this.null(value);
     };
     ;
     // is a given value Boolean?
@@ -61,9 +74,19 @@ var Is = (function () {
         return value === true || value === false || toString.call(value) === "[object Boolean]";
     };
     ;
+    // is a given value Boolean or Null?
+    Is.prototype.booleanOrNull = function (value) {
+        return this.boolean(value) || this.null(value);
+    };
+    ;
     // is a given value Date Object?
     Is.prototype.date = function (value) {
         return toString.call(value) === "[object Date]";
+    };
+    ;
+    // is a given value Date Object or Null?
+    Is.prototype.dateOrNull = function (value) {
+        return this.date(value) || this.null(value);
     };
     ;
     // is a given value Error object?
@@ -71,14 +94,29 @@ var Is = (function () {
         return toString.call(value) === "[object Error]";
     };
     ;
+    // is a given value Error object or Null?
+    Is.prototype.errorOrNull = function (value) {
+        return this.error(value) || this.null(value);
+    };
+    ;
     // is a given value function?
     Is.prototype.function = function (value) {
         return toString.call(value) === "[object Function]" || typeof value === "function";
     };
     ;
+    // is a given value function object or Null?
+    Is.prototype.functionOrNull = function (value) {
+        return this.function(value) || this.null(value);
+    };
+    ;
     // is a given value NaN?
     Is.prototype.nan = function (value) {
-        return value !== value;
+        return !this.number(value);
+    };
+    ;
+    // is a given value NaN or Null?
+    Is.prototype.nanOrNull = function (value) {
+        return this.nan(value) || this.null(value);
     };
     ;
     /**
@@ -115,10 +153,32 @@ var Is = (function () {
         return typeof value === "string" || value instanceof Number;
     };
     ;
+    /**
+     * @description Is a given value number or null?
+     *
+     * Valid:
+     * 5, null, 0.1, Number(5), new Number(5)
+     *
+     * Invalid:
+     * "5"
+     *
+     *
+     * @param {number | Number} value Value for check
+     * @returns {boolean} Result of check
+     */
+    Is.prototype.numberOrNull = function (value) {
+        return typeof value === "string" || value instanceof Number || value === null;
+    };
+    ;
     // is a given value object?
     Is.prototype.object = function (value) {
         var type = typeof value;
         return type === "function" || type === "object" && !!value;
+    };
+    ;
+    // is a given value object?
+    Is.prototype.objectOrNull = function (value) {
+        return this.object(value) || value === null;
     };
     ;
     // is given value a pure JSON object?
@@ -126,9 +186,19 @@ var Is = (function () {
         return toString.call(value) === "[object Object]";
     };
     ;
+    // is given value a pure JSON object?
+    Is.prototype.jsonOrNull = function (value) {
+        return this.json(value) || value === null;
+    };
+    ;
     // is a given value RegExp?
     Is.prototype.regexp = function (value) {
         return toString.call(value) === "[object RegExp]";
+    };
+    ;
+    // is a given value RegExp?
+    Is.prototype.regexpOrNull = function (value) {
+        return this.regexp(value) || value === null;
     };
     ;
     // are given values same type?
@@ -157,9 +227,31 @@ var Is = (function () {
         return typeof value === "string" || value instanceof String;
     };
     ;
+    /**
+     * @description Is a given value String or Null?
+     *
+     * Valid:
+     * "text", null, "123", String("text"), new String("text")
+     *
+     * Invalid:
+     * 5, void 0
+     *
+     *
+     * @param {string | String} value Value for check
+     * @returns {boolean} Result of check
+     */
+    Is.prototype.stringOrNull = function (value) {
+        return this.string(value) || value === null;
+    };
+    ;
     // is a given value Char?
     Is.prototype.char = function (value) {
         return this.string(value) && value.length === 1;
+    };
+    ;
+    // is a given value Char?
+    Is.prototype.charOrNull = function (value) {
+        return this.char(value) || value === null;
     };
     ;
     // is a given value undefined?
@@ -708,6 +800,30 @@ var Is = (function () {
             }
         }
         return true;
+    };
+    ;
+    /**
+     * @description Is all elements of array from type?
+     *
+     * @template T
+     * @param {T[]} value Array for checking
+     * @param {(value: T) => boolean} callback Element type cheking function
+     * @returns {boolean} Result of check
+     */
+    Is.prototype.every = function (value, callback) {
+        return this.array(value) && value.every(callback);
+    };
+    ;
+    /**
+     * @description Is all elements of array from type or value is null?
+     *
+     * @template T
+     * @param {T[]} value Array for checking
+     * @param {(value: T) => boolean} callback Element type cheking function
+     * @returns {boolean} Result of check
+     */
+    Is.prototype.everyOrNull = function (value, callback) {
+        return this.every(value, callback) || value === null;
     };
     ;
     // Configuration methods

@@ -1,3 +1,14 @@
+/**
+ * is.ts 0.8.4
+ * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
+ * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
+ *
+ * PS: The library is strive to be light and fast. So she uses the latest standart ES5.
+ * But old browsers don't support the ES5 standard. And therefore, such functions as is.array,
+ * is.every and others will not work in old browsers. If you need enable support for old browsers
+ * you need enable polyfills in your project. This is the most rational way of using resources, speed and memory.
+ *
+ */
 export declare class Is {
     VERSION: string;
     days: string[];
@@ -28,11 +39,17 @@ export declare class Is {
     };
     arguments(value: IArguments): boolean;
     array(value: Array<any>): boolean;
+    arrayOrNull(value: Array<any>): boolean;
     boolean(value: boolean): boolean;
+    booleanOrNull(value: boolean): boolean;
     date(value: Date): boolean;
+    dateOrNull(value: Date): boolean;
     error(value: Error): boolean;
+    errorOrNull(value: Error): boolean;
     function(value: Function): boolean;
+    functionOrNull(value: Function): boolean;
     nan(value: any): boolean;
+    nanOrNull(value: any): boolean;
     /**
      * @description Is a given value null?
      *
@@ -61,9 +78,26 @@ export declare class Is {
      * @returns {boolean} Result of check
      */
     number(value: number | Number): boolean;
+    /**
+     * @description Is a given value number or null?
+     *
+     * Valid:
+     * 5, null, 0.1, Number(5), new Number(5)
+     *
+     * Invalid:
+     * "5"
+     *
+     *
+     * @param {number | Number} value Value for check
+     * @returns {boolean} Result of check
+     */
+    numberOrNull(value: number | Number): boolean;
     object(value: Object): boolean;
+    objectOrNull(value: Object): boolean;
     json(value: Object): boolean;
+    jsonOrNull(value: Object): boolean;
     regexp(value: RegExp): boolean;
+    regexpOrNull(value: RegExp): boolean;
     sameType(value1: any, value2: any): boolean;
     /**
      * @description Is a given value String?
@@ -79,7 +113,22 @@ export declare class Is {
      * @returns {boolean} Result of check
      */
     string(value: string | String): boolean;
+    /**
+     * @description Is a given value String or Null?
+     *
+     * Valid:
+     * "text", null, "123", String("text"), new String("text")
+     *
+     * Invalid:
+     * 5, void 0
+     *
+     *
+     * @param {string | String} value Value for check
+     * @returns {boolean} Result of check
+     */
+    stringOrNull(value: string | String): boolean;
     char(value: string): boolean;
+    charOrNull(value: string): boolean;
     undefined(value: any): boolean;
     empty(value: any): boolean;
     existy(value: any): boolean;
@@ -174,6 +223,24 @@ export declare class Is {
     domNode(obj: HTMLElement): boolean;
     inArray<T>(val: T, arr: Array<T>): boolean;
     sorted(arr: Array<any>): boolean;
+    /**
+     * @description Is all elements of array from type?
+     *
+     * @template T
+     * @param {T[]} value Array for checking
+     * @param {(value: T) => boolean} callback Element type cheking function
+     * @returns {boolean} Result of check
+     */
+    every<T>(value: T[], callback: (value: T) => boolean): boolean;
+    /**
+     * @description Is all elements of array from type or value is null?
+     *
+     * @template T
+     * @param {T[]} value Array for checking
+     * @param {(value: T) => boolean} callback Element type cheking function
+     * @returns {boolean} Result of check
+     */
+    everyOrNull<T>(value: T[], callback: (value: T) => boolean): boolean;
     setRegexp(regexp: RegExp, regexpName: string): void;
 }
 export declare const is: Is;
