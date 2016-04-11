@@ -254,11 +254,6 @@ var Is = (function () {
         return this.char(value) || value === null;
     };
     ;
-    // is a given value undefined?
-    Is.prototype.undefined = function (value) {
-        return value === void 0;
-    };
-    ;
     // Presence checks
     /* -------------------------------------------------------------------------- */
     // is a given value empty? Objects, arrays, strings
@@ -273,6 +268,16 @@ var Is = (function () {
         else {
             return value === "";
         }
+    };
+    ;
+    // is a given value not undefined?
+    Is.prototype.defined = function (value) {
+        return value !== void 0;
+    };
+    ;
+    // is a given value undefined?
+    Is.prototype.undefined = function (value) {
+        return value === void 0;
     };
     ;
     // is a given value existy?

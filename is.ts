@@ -279,11 +279,6 @@ export class Is {
         return this.char(value) || value === null;
     };
 
-    // is a given value undefined?
-    public undefined(value: any): boolean {
-        return value === void 0;
-    };
-
 
     // Presence checks
     /* -------------------------------------------------------------------------- */
@@ -299,6 +294,16 @@ export class Is {
         } else {
             return value === "";
         }
+    };
+
+    // is a given value not undefined?
+    public defined(value: any): boolean {
+        return value !== void 0;
+    };
+
+    // is a given value undefined?
+    public undefined(value: any): boolean {
+        return value === void 0;
     };
 
     // is a given value existy?

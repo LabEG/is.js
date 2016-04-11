@@ -129,8 +129,9 @@ export declare class Is {
     stringOrNull(value: string | String): boolean;
     char(value: string): boolean;
     charOrNull(value: string): boolean;
-    undefined(value: any): boolean;
     empty(value: any): boolean;
+    defined(value: any): boolean;
+    undefined(value: any): boolean;
     existy(value: any): boolean;
     truthy(value: any): boolean;
     falsy(value: any): boolean;
