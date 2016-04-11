@@ -1,13 +1,21 @@
-// is.js 0.8.0
-// Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
-// Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
+/**
+ * is.ts 0.8.4
+ * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
+ * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
+ * 
+ * PS: The library is strive to be light and fast. So she uses the latest standart ES5.
+ * But old browsers don't support the ES5 standard. And therefore, such functions as is.array, 
+ * is.every and others will not work in old browsers. If you need enable support for old browsers
+ * you need enable polyfills in your project. This is the most rational way of using resources, speed and memory.
+ * 
+ */
 
 // Baseline
 /* -------------------------------------------------------------------------- */
 
 export class Is {
 
-    public VERSION: string = "0.8.0";
+    public VERSION: string = "0.8.4";
 
     public days: string[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     public months: string[] = [
@@ -78,7 +86,12 @@ export class Is {
 
     // is a given value Array?
     public array(value: Array<any>): boolean {    // check native isArray first
-        return Array.isArray ? Array.isArray(value) : toString.call(value) === "[object Array]";
+        return Array.isArray(value);
+    };
+
+    // is a given value Array or Null?
+    public arrayOrNull(value: Array<any>): boolean {    // check native isArray first
+        return this.array(value) || this.null(value);
     };
 
     // is a given value Boolean?
@@ -86,9 +99,19 @@ export class Is {
         return value === true || value === false || toString.call(value) === "[object Boolean]";
     };
 
+    // is a given value Boolean or Null?
+    public booleanOrNull(value: boolean): boolean {
+        return this.boolean(value) || this.null(value);
+    };
+
     // is a given value Date Object?
     public date(value: Date): boolean {
         return toString.call(value) === "[object Date]";
+    };
+
+    // is a given value Date Object or Null?
+    public dateOrNull(value: Date): boolean {
+        return this.date(value) || this.null(value);
     };
 
     // is a given value Error object?
@@ -96,14 +119,29 @@ export class Is {
         return toString.call(value) === "[object Error]";
     };
 
+    // is a given value Error object or Null?
+    public errorOrNull(value: Error): boolean {
+        return this.error(value) || this.null(value);
+    };
+
     // is a given value function?
     public function(value: Function): boolean {    // fallback check is for IE
         return toString.call(value) === "[object Function]" || typeof value === "function";
     };
 
+    // is a given value function object or Null?
+    public functionOrNull(value: Function): boolean {
+        return this.function(value) || this.null(value);
+    };
+
     // is a given value NaN?
     public nan(value: any): boolean {    // NaN is number :) Also it is the only value which does not equal itself
-        return value !== value;
+        return !this.number(value);
+    };
+
+    // is a given value NaN or Null?
+    public nanOrNull(value: any): boolean {    // NaN is number :) Also it is the only value which does not equal itself
+        return this.nan(value) || this.null(value);
     };
 
     /**
@@ -140,10 +178,32 @@ export class Is {
         return typeof value === "string" || value instanceof Number;
     };
 
+    /**
+     * @description Is a given value number or null?
+     * 
+     * Valid:
+     * 5, null, 0.1, Number(5), new Number(5)
+     * 
+     * Invalid:
+     * "5"
+     * 
+     *  
+     * @param {number | Number} value Value for check
+     * @returns {boolean} Result of check
+     */
+    public numberOrNull(value: number | Number): boolean {
+        return typeof value === "string" || value instanceof Number || value === null;
+    };
+
     // is a given value object?
     public object(value: Object): boolean {
         const type: string = typeof value;
         return type === "function" || type === "object" && !!value;
+    };
+
+    // is a given value object?
+    public objectOrNull(value: Object): boolean {
+        return this.object(value) || value === null;
     };
 
     // is given value a pure JSON object?
@@ -151,9 +211,19 @@ export class Is {
         return toString.call(value) === "[object Object]";
     };
 
+    // is given value a pure JSON object?
+    public jsonOrNull(value: Object): boolean {
+        return this.json(value) || value === null;
+    };
+
     // is a given value RegExp?
     public regexp(value: RegExp): boolean {
         return toString.call(value) === "[object RegExp]";
+    };
+
+    // is a given value RegExp?
+    public regexpOrNull(value: RegExp): boolean {
+        return this.regexp(value) || value === null;
     };
 
     // are given values same type?
@@ -182,9 +252,31 @@ export class Is {
         return typeof value === "string" || value instanceof String;
     };
 
+    /**
+     * @description Is a given value String or Null?
+     * 
+     * Valid:
+     * "text", null, "123", String("text"), new String("text")
+     * 
+     * Invalid:
+     * 5, void 0
+     * 
+     * 
+     * @param {string | String} value Value for check
+     * @returns {boolean} Result of check
+     */
+    public stringOrNull(value: string | String): boolean {
+        return this.string(value) || value === null;
+    };
+
     // is a given value Char?
     public char(value: string): boolean {
         return this.string(value) && value.length === 1;
+    };
+
+    // is a given value Char?
+    public charOrNull(value: string): boolean {
+        return this.char(value) || value === null;
     };
 
     // is a given value undefined?
@@ -768,6 +860,30 @@ export class Is {
             }
         }
         return true;
+    };
+
+    /**
+     * @description Is all elements of array from type?
+     * 
+     * @template T
+     * @param {T[]} value Array for checking
+     * @param {(value: T) => boolean} callback Element type cheking function
+     * @returns {boolean} Result of check
+     */
+    public every<T>(value: T[], callback: (value: T) => boolean): boolean {
+        return this.array(value) && value.every(callback);
+    };
+
+    /**
+     * @description Is all elements of array from type or value is null?
+     * 
+     * @template T
+     * @param {T[]} value Array for checking
+     * @param {(value: T) => boolean} callback Element type cheking function
+     * @returns {boolean} Result of check
+     */
+    public everyOrNull<T>(value: T[], callback: (value: T) => boolean): boolean {
+        return this.every(value, callback) || value === null;
     };
 
     // Configuration methods
