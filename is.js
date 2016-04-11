@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.4
+ * is.ts 0.8.7
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -14,7 +14,7 @@
 /* -------------------------------------------------------------------------- */
 var Is = (function () {
     function Is() {
-        this.VERSION = "0.8.4";
+        this.VERSION = "0.8.7";
         this.days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
         this.months = [
             "january", "february", "march",
@@ -150,7 +150,7 @@ var Is = (function () {
      * @returns {boolean} Result of check
      */
     Is.prototype.number = function (value) {
-        return typeof value === "string" || value instanceof Number;
+        return typeof value === "number" || value instanceof Number;
     };
     ;
     /**
@@ -167,7 +167,7 @@ var Is = (function () {
      * @returns {boolean} Result of check
      */
     Is.prototype.numberOrNull = function (value) {
-        return typeof value === "string" || value instanceof Number || value === null;
+        return typeof value === "number" || value instanceof Number || value === null;
     };
     ;
     // is a given value object?
@@ -241,7 +241,7 @@ var Is = (function () {
      * @returns {boolean} Result of check
      */
     Is.prototype.stringOrNull = function (value) {
-        return this.string(value) || value === null;
+        return typeof value === "string" || value instanceof String || value === null;
     };
     ;
     // is a given value Char?

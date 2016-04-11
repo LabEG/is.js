@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.4
+ * is.ts 0.8.7
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  * 
@@ -15,7 +15,7 @@
 
 export class Is {
 
-    public VERSION: string = "0.8.4";
+    public VERSION: string = "0.8.7";
 
     public days: string[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     public months: string[] = [
@@ -175,7 +175,7 @@ export class Is {
      * @returns {boolean} Result of check
      */
     public number(value: number | Number): boolean {
-        return typeof value === "string" || value instanceof Number;
+        return typeof value === "number" || value instanceof Number;
     };
 
     /**
@@ -192,7 +192,7 @@ export class Is {
      * @returns {boolean} Result of check
      */
     public numberOrNull(value: number | Number): boolean {
-        return typeof value === "string" || value instanceof Number || value === null;
+        return typeof value === "number" || value instanceof Number || value === null;
     };
 
     // is a given value object?
@@ -266,7 +266,7 @@ export class Is {
      * @returns {boolean} Result of check
      */
     public stringOrNull(value: string | String): boolean {
-        return this.string(value) || value === null;
+        return typeof value === "string" || value instanceof String || value === null;
     };
 
     // is a given value Char?
