@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.7
+ * is.ts 0.8.8
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -8,6 +8,13 @@
  * is.every and others will not work in old browsers. If you need enable support for old browsers
  * you need enable polyfills in your project. This is the most rational way of using resources, speed and memory.
  *
+ */
+/**
+ * @description
+ * Light library for chek types in runtime
+ *
+ * @export
+ * @class Is
  */
 export declare class Is {
     VERSION: string;
@@ -38,11 +45,85 @@ export declare class Is {
         [key: string]: RegExp;
     };
     arguments(value: IArguments): boolean;
+    /**
+     * @description Is a given value Array?
+     *
+     * Valid:
+     * [], [1, "test", null, void 0]
+     *
+     * Invalid:
+     * "test", 5, null, void 0, {test: 5}
+     *
+     *
+     * @param {Array<any>} value Value for check
+     * @returns {boolean} Result of check
+     */
     array(value: Array<any>): boolean;
+    /**
+     * @description Is a given value Array or Null?
+     *
+     * Valid:
+     * [], null, [1, "test", null, void 0]
+     *
+     * Invalid:
+     * "test", 5, , void 0, {test: 5}
+     *
+     *
+     * @param {Array<any>} value Value for check
+     * @returns {boolean} Result of check
+     */
     arrayOrNull(value: Array<any>): boolean;
-    boolean(value: boolean): boolean;
-    booleanOrNull(value: boolean): boolean;
+    /**
+     * @description Is a given value Boolean?
+     *
+     * Valid:
+     * true, false, Boolean(5), new Boolean("123")
+     *
+     * Invalid:
+     * "test", 5, null, void 0, {test: 5}
+     *
+     * @param {(boolean | Boolean)} value Value for check
+     * @returns {boolean} Result of check
+     */
+    boolean(value: boolean | Boolean): boolean;
+    /**
+     * @description Is a given value Boolean or Null?
+     *
+     * Valid:
+     * true, false, null, Boolean(5), new Boolean("123")
+     *
+     * Invalid:
+     * "test", 5, void 0, {test: 5}
+     *
+     * @param {(boolean | Boolean)} value Value for check
+     * @returns {boolean} Result of check
+     */
+    booleanOrNull(value: boolean | Boolean): boolean;
+    /**
+     * @description Is a given value Date Object?
+     *
+     * Valid:
+     * new Date()
+     *
+     * Invalid:
+     * "test", 5, null, void 0, {test: 5}
+     *
+     * @param {Date} value Value for check
+     * @returns {boolean} Result of check
+     */
     date(value: Date): boolean;
+    /**
+     * @description Is a given value Date Object or Null?
+     *
+     * Valid:
+     * new Date(), null
+     *
+     * Invalid:
+     * "test", 5, void 0, {test: 5}
+     *
+     * @param {Date} value Value for check
+     * @returns {boolean} Result of check
+     */
     dateOrNull(value: Date): boolean;
     error(value: Error): boolean;
     errorOrNull(value: Error): boolean;
@@ -233,15 +314,6 @@ export declare class Is {
      * @returns {boolean} Result of check
      */
     every<T>(value: T[], callback: (value: T) => boolean): boolean;
-    /**
-     * @description Is all elements of array from type or value is null?
-     *
-     * @template T
-     * @param {T[]} value Array for checking
-     * @param {(value: T) => boolean} callback Element type cheking function
-     * @returns {boolean} Result of check
-     */
-    everyOrNull<T>(value: T[], callback: (value: T) => boolean): boolean;
     setRegexp(regexp: RegExp, regexpName: string): void;
 }
 export declare const is: Is;

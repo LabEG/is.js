@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.7
+ * is.ts 0.8.8
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -12,9 +12,16 @@
 "use strict";
 // Baseline
 /* -------------------------------------------------------------------------- */
+/**
+ * @description
+ * Light library for chek types in runtime
+ *
+ * @export
+ * @class Is
+ */
 var Is = (function () {
     function Is() {
-        this.VERSION = "0.8.7";
+        this.VERSION = "0.8.8";
         this.days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
         this.months = [
             "january", "february", "march",
@@ -59,34 +66,102 @@ var Is = (function () {
         return !this.null(value) && (toString.call(value) === "[object Arguments]" || (typeof value === "object" && "callee" in value));
     };
     ;
-    // is a given value Array?
+    /**
+     * @description Is a given value Array?
+     *
+     * Valid:
+     * [], [1, "test", null, void 0]
+     *
+     * Invalid:
+     * "test", 5, null, void 0, {test: 5}
+     *
+     *
+     * @param {Array<any>} value Value for check
+     * @returns {boolean} Result of check
+     */
     Is.prototype.array = function (value) {
         return Array.isArray(value);
     };
     ;
-    // is a given value Array or Null?
+    /**
+     * @description Is a given value Array or Null?
+     *
+     * Valid:
+     * [], null, [1, "test", null, void 0]
+     *
+     * Invalid:
+     * "test", 5, , void 0, {test: 5}
+     *
+     *
+     * @param {Array<any>} value Value for check
+     * @returns {boolean} Result of check
+     */
     Is.prototype.arrayOrNull = function (value) {
-        return this.array(value) || this.null(value);
+        return Array.isArray(value) || this.null(value);
     };
     ;
-    // is a given value Boolean?
+    /**
+     * @description Is a given value Boolean?
+     *
+     * Valid:
+     * true, false, Boolean(5), new Boolean("123")
+     *
+     * Invalid:
+     * "test", 5, null, void 0, {test: 5}
+     *
+     * @param {(boolean | Boolean)} value Value for check
+     * @returns {boolean} Result of check
+     */
     Is.prototype.boolean = function (value) {
-        return value === true || value === false || toString.call(value) === "[object Boolean]";
+        return typeof value === "boolean" || value instanceof Boolean;
     };
     ;
-    // is a given value Boolean or Null?
+    /**
+     * @description Is a given value Boolean or Null?
+     *
+     * Valid:
+     * true, false, null, Boolean(5), new Boolean("123")
+     *
+     * Invalid:
+     * "test", 5, void 0, {test: 5}
+     *
+     * @param {(boolean | Boolean)} value Value for check
+     * @returns {boolean} Result of check
+     */
     Is.prototype.booleanOrNull = function (value) {
-        return this.boolean(value) || this.null(value);
+        return typeof value === "boolean" || value instanceof Boolean || value === null;
     };
     ;
-    // is a given value Date Object?
+    /**
+     * @description Is a given value Date Object?
+     *
+     * Valid:
+     * new Date()
+     *
+     * Invalid:
+     * "test", 5, null, void 0, {test: 5}
+     *
+     * @param {Date} value Value for check
+     * @returns {boolean} Result of check
+     */
     Is.prototype.date = function (value) {
-        return toString.call(value) === "[object Date]";
+        return value instanceof Date;
     };
     ;
-    // is a given value Date Object or Null?
+    /**
+     * @description Is a given value Date Object or Null?
+     *
+     * Valid:
+     * new Date(), null
+     *
+     * Invalid:
+     * "test", 5, void 0, {test: 5}
+     *
+     * @param {Date} value Value for check
+     * @returns {boolean} Result of check
+     */
     Is.prototype.dateOrNull = function (value) {
-        return this.date(value) || this.null(value);
+        return value instanceof Date || this.null(value);
     };
     ;
     // is a given value Error object?
@@ -817,18 +892,6 @@ var Is = (function () {
      */
     Is.prototype.every = function (value, callback) {
         return this.array(value) && value.every(callback);
-    };
-    ;
-    /**
-     * @description Is all elements of array from type or value is null?
-     *
-     * @template T
-     * @param {T[]} value Array for checking
-     * @param {(value: T) => boolean} callback Element type cheking function
-     * @returns {boolean} Result of check
-     */
-    Is.prototype.everyOrNull = function (value, callback) {
-        return this.every(value, callback) || value === null;
     };
     ;
     // Configuration methods
