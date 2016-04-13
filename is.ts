@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.9
+ * is.ts 0.8.10
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  * 
@@ -22,7 +22,7 @@
  */
 export class Is {
 
-    public VERSION: string = "0.8.9";
+    public VERSION: string = "0.8.10";
 
     public days: string[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     public months: string[] = [
@@ -250,7 +250,7 @@ export class Is {
      * @returns {boolean} Result of check
      */
     public number(value: number | Number): boolean { // NaN have typeof number
-        return (typeof value === "number" && !isNaN(value)) || value instanceof Number;
+        return (typeof value === "number" || value instanceof Number) && !isNaN(<number>value);
     };
 
     /**
@@ -267,7 +267,7 @@ export class Is {
      * @returns {boolean} Result of check
      */
     public numberOrNull(value: number | Number): boolean { // NaN have typeof number
-        return (typeof value === "number" && !isNaN(value)) || value instanceof Number || value === null;
+        return (typeof value === "number" || value instanceof Number) && !isNaN(<number>value) || value === null;
     };
 
     // is a given value object?

@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.8
+ * is.ts 0.8.10
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -21,7 +21,7 @@
  */
 var Is = (function () {
     function Is() {
-        this.VERSION = "0.8.8";
+        this.VERSION = "0.8.10";
         this.days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
         this.months = [
             "january", "february", "march",
@@ -201,7 +201,7 @@ var Is = (function () {
      * null
      *
      * Invalid:
-     * "test", 5, {test}
+     * "test", 5, {test: 5}, void 0
      *
      *
      * @param {*} value Value for check
@@ -218,14 +218,14 @@ var Is = (function () {
      * 5, 0.1, Number(5), new Number(5)
      *
      * Invalid:
-     * "5", null
+     * "5", null, NaN
      *
      *
      * @param {number | Number} value Value for check
      * @returns {boolean} Result of check
      */
     Is.prototype.number = function (value) {
-        return typeof value === "number" || value instanceof Number;
+        return (typeof value === "number" || value instanceof Number) && !isNaN(value);
     };
     ;
     /**
@@ -235,14 +235,14 @@ var Is = (function () {
      * 5, null, 0.1, Number(5), new Number(5)
      *
      * Invalid:
-     * "5"
+     * "5", NaN
      *
      *
      * @param {number | Number} value Value for check
      * @returns {boolean} Result of check
      */
     Is.prototype.numberOrNull = function (value) {
-        return typeof value === "number" || value instanceof Number || value === null;
+        return (typeof value === "number" || value instanceof Number) && !isNaN(value) || value === null;
     };
     ;
     // is a given value object?

@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.8
+ * is.ts 0.8.10
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -138,7 +138,7 @@ export declare class Is {
      * null
      *
      * Invalid:
-     * "test", 5, {test}
+     * "test", 5, {test: 5}, void 0
      *
      *
      * @param {*} value Value for check
@@ -152,7 +152,7 @@ export declare class Is {
      * 5, 0.1, Number(5), new Number(5)
      *
      * Invalid:
-     * "5", null
+     * "5", null, NaN
      *
      *
      * @param {number | Number} value Value for check
@@ -166,7 +166,7 @@ export declare class Is {
      * 5, null, 0.1, Number(5), new Number(5)
      *
      * Invalid:
-     * "5"
+     * "5", NaN
      *
      *
      * @param {number | Number} value Value for check
