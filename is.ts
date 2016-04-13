@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.8
+ * is.ts 0.8.9
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  * 
@@ -22,7 +22,7 @@
  */
 export class Is {
 
-    public VERSION: string = "0.8.8";
+    public VERSION: string = "0.8.9";
 
     public days: string[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     public months: string[] = [
@@ -104,7 +104,7 @@ export class Is {
      * @param {Array<any>} value Value for check
      * @returns {boolean} Result of check
      */
-    public array(value: Array<any>): boolean {    // check native isArray first
+    public array(value: Array<any>): boolean {
         return Array.isArray(value);
     };
 
@@ -121,7 +121,7 @@ export class Is {
      * @param {Array<any>} value Value for check
      * @returns {boolean} Result of check
      */
-    public arrayOrNull(value: Array<any>): boolean {    // check native isArray first
+    public arrayOrNull(value: Array<any>): boolean {
         return Array.isArray(value) || this.null(value);
     };
 
@@ -226,7 +226,7 @@ export class Is {
      * null
      * 
      * Invalid:
-     * "test", 5, {test}
+     * "test", 5, {test: 5}, void 0
      * 
      * 
      * @param {*} value Value for check
@@ -243,14 +243,14 @@ export class Is {
      * 5, 0.1, Number(5), new Number(5)
      * 
      * Invalid:
-     * "5", null
+     * "5", null, NaN
      * 
      *  
      * @param {number | Number} value Value for check
      * @returns {boolean} Result of check
      */
-    public number(value: number | Number): boolean {
-        return typeof value === "number" || value instanceof Number;
+    public number(value: number | Number): boolean { // NaN have typeof number
+        return (typeof value === "number" && !isNaN(value)) || value instanceof Number;
     };
 
     /**
@@ -260,14 +260,14 @@ export class Is {
      * 5, null, 0.1, Number(5), new Number(5)
      * 
      * Invalid:
-     * "5"
+     * "5", NaN
      * 
      *  
      * @param {number | Number} value Value for check
      * @returns {boolean} Result of check
      */
-    public numberOrNull(value: number | Number): boolean {
-        return typeof value === "number" || value instanceof Number || value === null;
+    public numberOrNull(value: number | Number): boolean { // NaN have typeof number
+        return (typeof value === "number" && !isNaN(value)) || value instanceof Number || value === null;
     };
 
     // is a given value object?
