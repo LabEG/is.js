@@ -191,7 +191,7 @@ var Is = (function () {
     ;
     // is a given value NaN or Null?
     Is.prototype.nanOrNull = function (value) {
-        return this.nan(value) || this.null(value);
+        return !this.number(value) || this.null(value);
     };
     ;
     /**
@@ -225,7 +225,7 @@ var Is = (function () {
      * @returns {boolean} Result of check
      */
     Is.prototype.number = function (value) {
-        return (typeof value === "number" || value instanceof Number) && !isNaN(value);
+        return (typeof value === "number" || value instanceof Number) && !isNaN(value); // <number> TS bug, isNaN accept Number
     };
     ;
     /**
@@ -242,7 +242,7 @@ var Is = (function () {
      * @returns {boolean} Result of check
      */
     Is.prototype.numberOrNull = function (value) {
-        return (typeof value === "number" || value instanceof Number) && !isNaN(value) || value === null;
+        return (typeof value === "number" || value instanceof Number) && !isNaN(value) || value === null; // <number> TS bug, isNaN accept Number
     };
     ;
     // is a given value object?

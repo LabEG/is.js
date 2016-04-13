@@ -216,7 +216,7 @@ export class Is {
 
     // is a given value NaN or Null?
     public nanOrNull(value: any): boolean {
-        return this.nan(value) || this.null(value);
+        return !this.number(value) || this.null(value);
     };
 
     /**
@@ -250,7 +250,8 @@ export class Is {
      * @returns {boolean} Result of check
      */
     public number(value: number | Number): boolean { // NaN have typeof number
-        return (typeof value === "number" || value instanceof Number) && !isNaN(<number>value);
+        return (typeof value === "number" || value instanceof Number) &&
+            !isNaN(<number>value); // <number> TS bug, isNaN accept Number
     };
 
     /**
@@ -267,7 +268,8 @@ export class Is {
      * @returns {boolean} Result of check
      */
     public numberOrNull(value: number | Number): boolean { // NaN have typeof number
-        return (typeof value === "number" || value instanceof Number) && !isNaN(<number>value) || value === null;
+        return (typeof value === "number" || value instanceof Number) &&
+            !isNaN(<number>value) || value === null; // <number> TS bug, isNaN accept Number
     };
 
     // is a given value object?
