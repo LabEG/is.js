@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.10
+ * is.ts 0.8.11
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -208,8 +208,8 @@ export declare class Is {
      * @returns {boolean} Result of check
      */
     stringOrNull(value: string | String): boolean;
-    char(value: string): boolean;
-    charOrNull(value: string): boolean;
+    char(value: string | String): boolean;
+    charOrNull(value: string | String): boolean;
     empty(value: any): boolean;
     defined(value: any): boolean;
     undefined(value: any): boolean;

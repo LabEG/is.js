@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.10
+ * is.ts 0.8.11
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -21,7 +21,7 @@
  */
 var Is = (function () {
     function Is() {
-        this.VERSION = "0.8.10";
+        this.VERSION = "0.8.11";
         this.days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
         this.months = [
             "january", "february", "march",
@@ -63,7 +63,7 @@ var Is = (function () {
     /* -------------------------------------------------------------------------- */
     // is a given value Arguments?
     Is.prototype.arguments = function (value) {
-        return !this.null(value) && (toString.call(value) === "[object Arguments]" || (typeof value === "object" && "callee" in value));
+        return !(value === null) && (toString.call(value) === "[object Arguments]" || (typeof value === "object" && "callee" in value));
     };
     ;
     /**
@@ -97,7 +97,7 @@ var Is = (function () {
      * @returns {boolean} Result of check
      */
     Is.prototype.arrayOrNull = function (value) {
-        return Array.isArray(value) || this.null(value);
+        return Array.isArray(value) || value === null;
     };
     ;
     /**
@@ -161,7 +161,7 @@ var Is = (function () {
      * @returns {boolean} Result of check
      */
     Is.prototype.dateOrNull = function (value) {
-        return value instanceof Date || this.null(value);
+        return value instanceof Date || value === null;
     };
     ;
     // is a given value Error object?
@@ -171,7 +171,7 @@ var Is = (function () {
     ;
     // is a given value Error object or Null?
     Is.prototype.errorOrNull = function (value) {
-        return this.error(value) || this.null(value);
+        return this.error(value) || value === null;
     };
     ;
     // is a given value function?
@@ -181,7 +181,7 @@ var Is = (function () {
     ;
     // is a given value function object or Null?
     Is.prototype.functionOrNull = function (value) {
-        return this.function(value) || this.null(value);
+        return this.function(value) || value === null;
     };
     ;
     // is a given value NaN?
@@ -191,7 +191,7 @@ var Is = (function () {
     ;
     // is a given value NaN or Null?
     Is.prototype.nanOrNull = function (value) {
-        return !this.number(value) || this.null(value);
+        return !this.number(value) || value === null;
     };
     ;
     /**
@@ -225,7 +225,8 @@ var Is = (function () {
      * @returns {boolean} Result of check
      */
     Is.prototype.number = function (value) {
-        return (typeof value === "number" || value instanceof Number) && !isNaN(value); // <number> TS bug, isNaN accept Number
+        return (typeof value === "number" || value instanceof Number) &&
+            !isNaN(value); // <number> TS bug, isNaN accept Number
     };
     ;
     /**
@@ -242,7 +243,8 @@ var Is = (function () {
      * @returns {boolean} Result of check
      */
     Is.prototype.numberOrNull = function (value) {
-        return (typeof value === "number" || value instanceof Number) && !isNaN(value) || value === null; // <number> TS bug, isNaN accept Number
+        return (typeof value === "number" || value instanceof Number) &&
+            !isNaN(value) || value === null; // <number> TS bug, isNaN accept Number
     };
     ;
     // is a given value object?
@@ -253,7 +255,8 @@ var Is = (function () {
     ;
     // is a given value object?
     Is.prototype.objectOrNull = function (value) {
-        return this.object(value) || value === null;
+        var type = typeof value;
+        return (type === "function" || type === "object" && !!value) || value === null;
     };
     ;
     // is given value a pure JSON object?
@@ -263,7 +266,7 @@ var Is = (function () {
     ;
     // is given value a pure JSON object?
     Is.prototype.jsonOrNull = function (value) {
-        return this.json(value) || value === null;
+        return toString.call(value) === "[object Object]" || value === null;
     };
     ;
     // is a given value RegExp?
@@ -273,7 +276,7 @@ var Is = (function () {
     ;
     // is a given value RegExp?
     Is.prototype.regexpOrNull = function (value) {
-        return this.regexp(value) || value === null;
+        return toString.call(value) === "[object RegExp]" || value === null;
     };
     ;
     // are given values same type?
@@ -321,12 +324,12 @@ var Is = (function () {
     ;
     // is a given value Char?
     Is.prototype.char = function (value) {
-        return this.string(value) && value.length === 1;
+        return typeof value === "string" || value instanceof String && value.length === 1;
     };
     ;
     // is a given value Char?
     Is.prototype.charOrNull = function (value) {
-        return this.char(value) || value === null;
+        return (typeof value === "string" || value instanceof String && value.length === 1) || value === null;
     };
     ;
     // Presence checks
