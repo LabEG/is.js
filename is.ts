@@ -191,7 +191,7 @@ export class Is {
 
     // is a given value Error object?
     public error(value: Error): boolean {
-        return toString.call(value) === "[object Error]";
+        return Object.prototype.toString.call(value) === "[object Error]";
     };
 
     // is a given value Error object or Null?
@@ -201,7 +201,7 @@ export class Is {
 
     // is a given value function?
     public function(value: Function): boolean {    // fallback check is for IE
-        return toString.call(value) === "[object Function]" || typeof value === "function";
+        return typeof value === "function" || Object.prototype.toString.call(value) === "[object Function]";
     };
 
     // is a given value function object or Null?
@@ -286,22 +286,22 @@ export class Is {
 
     // is given value a pure JSON object?
     public json(value: Object): boolean {
-        return toString.call(value) === "[object Object]";
+        return Object.prototype.toString.call(value) === "[object Object]";
     };
 
     // is given value a pure JSON object?
     public jsonOrNull(value: Object): boolean {
-        return toString.call(value) === "[object Object]" || value === null;
+        return Object.prototype.toString.call(value) === "[object Object]" || value === null;
     };
 
     // is a given value RegExp?
     public regexp(value: RegExp): boolean {
-        return toString.call(value) === "[object RegExp]";
+        return Object.prototype.toString.call(value) === "[object RegExp]";
     };
 
     // is a given value RegExp?
     public regexpOrNull(value: RegExp): boolean {
-        return toString.call(value) === "[object RegExp]" || value === null;
+        return Object.prototype.toString.call(value) === "[object RegExp]" || value === null;
     };
 
     // are given values same type?
@@ -310,7 +310,7 @@ export class Is {
         if (this.nan(value1) || this.nan(value2)) {
             return this.nan(value1) === this.nan(value2);
         }
-        return toString.call(value1) === toString.call(value2);
+        return Object.prototype.toString.call(value1) === Object.prototype.toString.call(value2);
     };
 
     /**

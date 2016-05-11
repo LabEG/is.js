@@ -166,7 +166,7 @@ var Is = (function () {
     ;
     // is a given value Error object?
     Is.prototype.error = function (value) {
-        return toString.call(value) === "[object Error]";
+        return Object.prototype.toString.call(value) === "[object Error]";
     };
     ;
     // is a given value Error object or Null?
@@ -176,7 +176,7 @@ var Is = (function () {
     ;
     // is a given value function?
     Is.prototype.function = function (value) {
-        return toString.call(value) === "[object Function]" || typeof value === "function";
+        return typeof value === "function" || Object.prototype.toString.call(value) === "[object Function]";
     };
     ;
     // is a given value function object or Null?
@@ -261,22 +261,22 @@ var Is = (function () {
     ;
     // is given value a pure JSON object?
     Is.prototype.json = function (value) {
-        return toString.call(value) === "[object Object]";
+        return Object.prototype.toString.call(value) === "[object Object]";
     };
     ;
     // is given value a pure JSON object?
     Is.prototype.jsonOrNull = function (value) {
-        return toString.call(value) === "[object Object]" || value === null;
+        return Object.prototype.toString.call(value) === "[object Object]" || value === null;
     };
     ;
     // is a given value RegExp?
     Is.prototype.regexp = function (value) {
-        return toString.call(value) === "[object RegExp]";
+        return Object.prototype.toString.call(value) === "[object RegExp]";
     };
     ;
     // is a given value RegExp?
     Is.prototype.regexpOrNull = function (value) {
-        return toString.call(value) === "[object RegExp]" || value === null;
+        return Object.prototype.toString.call(value) === "[object RegExp]" || value === null;
     };
     ;
     // are given values same type?
@@ -285,7 +285,7 @@ var Is = (function () {
         if (this.nan(value1) || this.nan(value2)) {
             return this.nan(value1) === this.nan(value2);
         }
-        return toString.call(value1) === toString.call(value2);
+        return Object.prototype.toString.call(value1) === Object.prototype.toString.call(value2);
     };
     ;
     /**
