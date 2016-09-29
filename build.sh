@@ -9,10 +9,10 @@ echo "Build ES6 CommonJS";
 tsc ./src/is.ts --declaration --sourceMap --target ES6 --module commonjs --outDir ./build/es6_commonjs;
 
 echo "Build ES5 AMD";
-tsc ./src/is.ts --declaration --sourceMap --target ES5 --module amd --outDir ./build/es5_commonjs;
+tsc ./src/is.ts --declaration --sourceMap --target ES5 --module amd --outDir ./build/es5_amd;
 
 echo "Build ES6 AMD";
-tsc ./src/is.ts --declaration --sourceMap --target ES6 --module amd --outDir ./build/es6_commonjs;
+tsc ./src/is.ts --declaration --sourceMap --target ES6 --module amd --outDir ./build/es6_amd;
 
 echo "Build ES5 SystemJS";
 tsc ./src/is.ts --declaration --sourceMap --target ES5 --module system --outDir ./build/es5_system;
