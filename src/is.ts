@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.13
+ * is.ts 0.8.14
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  * 
@@ -22,7 +22,7 @@
  */
 export class Is {
 
-    public VERSION: string = "0.8.13";
+    public VERSION: string = "0.8.14";
 
     public days: string[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     public months: string[] = [
