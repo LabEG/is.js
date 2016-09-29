@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.11
+ * is.ts 0.8.13
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -21,7 +21,7 @@
  */
 var Is = (function () {
     function Is() {
-        this.VERSION = "0.8.11";
+        this.VERSION = "0.8.13";
         this.days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
         this.months = [
             "january", "february", "march",
