@@ -59,8 +59,8 @@ class User {
         this.age = is.number(object.age) ? object.age : this.age;
         this.weight = is.number(object.weight) ? object.weight : this.weight;
 
-        // nullable types must by checked individualy
-        this.weight = is.number(object.sex) || is.null(object.sex) ? object.sex : this.sex;
+        // nullable types, work only on base primitives
+        this.weight = is.numberOrNull(object.sex) ? object.sex : this.sex;
 
         // on important logic we must drop exception and prevent work of programm
         this.identifier = is.string(object.identifier) ? object.identifier :
@@ -111,23 +111,34 @@ Strong Type checks
 // Type checks:
 is.arguments(value: IArguments): boolean
 is.array(value: Array<any>): boolean
+is.arrayOrNull(value: Array<any>): boolean
 is.boolean(value: boolean): boolean
+is.booleanOrNull(value: boolean): boolean
 is.date(value: Date): boolean
+is.dateOrNull(value: Date): boolean
 is.error(value: Error): boolean
+is.errorOrNull(value: Error): boolean
 is.function(value: Function): boolean
+is.functionOrNull(value: Function): boolean
 is.nan(value: any): boolean
+is.nanOrNull(value: any): boolean
 is.null(value: any): boolean
 is.number(value: number): boolean
+is.numberOrNull(value: number): boolean
 is.object(value: Object): boolean
+is.objectOrNull(value: Object): boolean
 is.json(value: Object): boolean
+is.jsonOrNull(value: Object): boolean
 is.regexp(value: RegExp): boolean
+is.regexpOrNull(value: RegExp): boolean
 is.sameType(value1: any, value2: any): boolean
-is.string(value: string): boolean
-is.char(value: string): boolean
-is.undefined(value: any): boolean
+is.stringOrNull(value: string): boolean
+is.charOrNull(value: string): boolean
 
 // Presence checks:
 is.empty(value: any): boolean
+is.defined(value: any): boolean
+is.undefined(value: any): boolean
 is.existy(value: any): boolean
 is.truthy(value: any): boolean
 is.falsy(value: any): boolean

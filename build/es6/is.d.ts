@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.15
+ * is.ts 0.8.16
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -217,7 +217,7 @@ export declare class Is {
     truthy(value: any): boolean;
     falsy(value: any): boolean;
     space(value: string): boolean;
-    equal(value1: any, value2: any): boolean;
+    equal(value1: Object | string | number | null | void, value2: Object | string | number | null | void): boolean;
     even(numb: number): boolean;
     odd(numb: number): boolean;
     positive(numb: number): boolean;
@@ -259,8 +259,8 @@ export declare class Is {
     tomorrow(obj: Date): boolean;
     past(obj: Date): boolean;
     future(obj: Date): boolean;
-    day(obj: Date, dayString: any): boolean;
-    month(obj: Date, monthString: any): boolean;
+    day(obj: Date, dayString: string): boolean;
+    month(obj: Date, monthString: string): boolean;
     year(obj: Date, year: number): boolean;
     leapYear(year: number): boolean;
     weekend(obj: Date): boolean;

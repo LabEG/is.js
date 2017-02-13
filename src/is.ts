@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.15
+ * is.ts 0.8.16
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  * 
@@ -22,7 +22,7 @@
  */
 export class Is {
 
-    public VERSION: string = "0.8.15";
+    public VERSION: string = "0.8.16";
 
     public days: string[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     public months: string[] = [
@@ -416,7 +416,7 @@ export class Is {
 
     // are given values equal? supports numbers, strings, regexps, booleans
     // TODO: Add object and array support
-    public equal(value1, value2): boolean {
+    public equal(value1: Object | string | number | null | void, value2: Object | string | number | null | void): boolean {
 
         return JSON.stringify(value1) === JSON.stringify(value2);
 
@@ -651,12 +651,12 @@ export class Is {
     }
 
     // is a given dates day equal given dayString parameter?
-    public day(obj: Date, dayString): boolean {
+    public day(obj: Date, dayString: string): boolean {
         return this.date(obj) && dayString.toLowerCase() === this.days[obj.getDay()];
     };
 
     // is a given dates month equal given monthString parameter?
-    public month(obj: Date, monthString): boolean {
+    public month(obj: Date, monthString: string): boolean {
         return this.date(obj) && monthString.toLowerCase() === this.months[obj.getMonth()];
     };
 

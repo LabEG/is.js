@@ -1,6 +1,6 @@
 {
   "name": "is_ts",
-  "version": "0.8.15",
+  "version": "0.8.16",
   "main": "./build/is.js",
   "typings": "./build/is.d.ts",
   "license": "MIT",
