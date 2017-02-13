@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.14
+ * is.ts 0.8.15
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *

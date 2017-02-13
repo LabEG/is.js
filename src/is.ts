@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.14
+ * is.ts 0.8.15
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  * 
@@ -22,7 +22,7 @@
  */
 export class Is {
 
-    public VERSION: string = "0.8.14";
+    public VERSION: string = "0.8.15";
 
     public days: string[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     public months: string[] = [
@@ -88,7 +88,7 @@ export class Is {
 
     // is a given value Arguments?
     public arguments(value: IArguments): boolean {    // fallback check is for IE
-        return !(value === null) && (toString.call(value) === "[object Arguments]" || (typeof value === "object" && "callee" in value));
+        return !(value === null) && (Object.prototype.toString.call(value) === "[object Arguments]" || (typeof value === "object" && "callee" in value));
     };
 
     /**

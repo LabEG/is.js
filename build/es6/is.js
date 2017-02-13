@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.14
+ * is.ts 0.8.15
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -9,7 +9,15 @@
  * you need enable polyfills in your project. This is the most rational way of using resources, speed and memory.
  *
  */
-define(["require", "exports"], function (require, exports) {
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports"], factory);
+    }
+})(function (require, exports) {
     "use strict";
     // Baseline
     /* -------------------------------------------------------------------------- */
@@ -20,9 +28,9 @@ define(["require", "exports"], function (require, exports) {
      * @export
      * @class Is
      */
-    var Is = (function () {
-        function Is() {
-            this.VERSION = "0.8.14";
+    class Is {
+        constructor() {
+            this.VERSION = "0.8.15";
             this.days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
             this.months = [
                 "january", "february", "march",
@@ -63,9 +71,9 @@ define(["require", "exports"], function (require, exports) {
         // Type checks
         /* -------------------------------------------------------------------------- */
         // is a given value Arguments?
-        Is.prototype.arguments = function (value) {
-            return !(value === null) && (toString.call(value) === "[object Arguments]" || (typeof value === "object" && "callee" in value));
-        };
+        arguments(value) {
+            return !(value === null) && (Object.prototype.toString.call(value) === "[object Arguments]" || (typeof value === "object" && "callee" in value));
+        }
         ;
         /**
          * @description Is a given value Array?
@@ -80,9 +88,9 @@ define(["require", "exports"], function (require, exports) {
          * @param {Array<any>} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.array = function (value) {
+        array(value) {
             return Array.isArray(value);
-        };
+        }
         ;
         /**
          * @description Is a given value Array or Null?
@@ -97,9 +105,9 @@ define(["require", "exports"], function (require, exports) {
          * @param {Array<any>} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.arrayOrNull = function (value) {
+        arrayOrNull(value) {
             return Array.isArray(value) || value === null;
-        };
+        }
         ;
         /**
          * @description Is a given value Boolean?
@@ -113,9 +121,9 @@ define(["require", "exports"], function (require, exports) {
          * @param {(boolean | Boolean)} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.boolean = function (value) {
+        boolean(value) {
             return typeof value === "boolean" || value instanceof Boolean;
-        };
+        }
         ;
         /**
          * @description Is a given value Boolean or Null?
@@ -129,9 +137,9 @@ define(["require", "exports"], function (require, exports) {
          * @param {(boolean | Boolean)} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.booleanOrNull = function (value) {
+        booleanOrNull(value) {
             return typeof value === "boolean" || value instanceof Boolean || value === null;
-        };
+        }
         ;
         /**
          * @description Is a given value Date Object?
@@ -145,9 +153,9 @@ define(["require", "exports"], function (require, exports) {
          * @param {Date} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.date = function (value) {
+        date(value) {
             return value instanceof Date;
-        };
+        }
         ;
         /**
          * @description Is a given value Date Object or Null?
@@ -161,39 +169,39 @@ define(["require", "exports"], function (require, exports) {
          * @param {Date} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.dateOrNull = function (value) {
+        dateOrNull(value) {
             return value instanceof Date || value === null;
-        };
+        }
         ;
         // is a given value Error object?
-        Is.prototype.error = function (value) {
+        error(value) {
             return Object.prototype.toString.call(value) === "[object Error]";
-        };
+        }
         ;
         // is a given value Error object or Null?
-        Is.prototype.errorOrNull = function (value) {
+        errorOrNull(value) {
             return this.error(value) || value === null;
-        };
+        }
         ;
         // is a given value function?
-        Is.prototype.function = function (value) {
+        function(value) {
             return typeof value === "function" || Object.prototype.toString.call(value) === "[object Function]";
-        };
+        }
         ;
         // is a given value function object or Null?
-        Is.prototype.functionOrNull = function (value) {
+        functionOrNull(value) {
             return this.function(value) || value === null;
-        };
+        }
         ;
         // is a given value NaN?
-        Is.prototype.nan = function (value) {
+        nan(value) {
             return !this.number(value);
-        };
+        }
         ;
         // is a given value NaN or Null?
-        Is.prototype.nanOrNull = function (value) {
+        nanOrNull(value) {
             return !this.number(value) || value === null;
-        };
+        }
         ;
         /**
          * @description Is a given value null?
@@ -208,9 +216,9 @@ define(["require", "exports"], function (require, exports) {
          * @param {*} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.null = function (value) {
+        null(value) {
             return value === null;
-        };
+        }
         ;
         /**
          * @description Is a given value number?
@@ -225,10 +233,10 @@ define(["require", "exports"], function (require, exports) {
          * @param {number | Number} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.number = function (value) {
+        number(value) {
             return (typeof value === "number" || value instanceof Number) &&
                 !isNaN(value); // <number> TS bug, isNaN accept Number
-        };
+        }
         ;
         /**
          * @description Is a given value number or null?
@@ -243,51 +251,51 @@ define(["require", "exports"], function (require, exports) {
          * @param {number | Number} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.numberOrNull = function (value) {
+        numberOrNull(value) {
             return (typeof value === "number" || value instanceof Number) &&
                 !isNaN(value) || value === null; // <number> TS bug, isNaN accept Number
-        };
+        }
         ;
         // is a given value object?
-        Is.prototype.object = function (value) {
-            var type = typeof value;
+        object(value) {
+            const type = typeof value;
             return type === "function" || type === "object" && !!value;
-        };
+        }
         ;
         // is a given value object?
-        Is.prototype.objectOrNull = function (value) {
-            var type = typeof value;
+        objectOrNull(value) {
+            const type = typeof value;
             return (type === "function" || type === "object" && !!value) || value === null;
-        };
+        }
         ;
         // is given value a pure JSON object?
-        Is.prototype.json = function (value) {
+        json(value) {
             return Object.prototype.toString.call(value) === "[object Object]";
-        };
+        }
         ;
         // is given value a pure JSON object?
-        Is.prototype.jsonOrNull = function (value) {
+        jsonOrNull(value) {
             return Object.prototype.toString.call(value) === "[object Object]" || value === null;
-        };
+        }
         ;
         // is a given value RegExp?
-        Is.prototype.regexp = function (value) {
+        regexp(value) {
             return Object.prototype.toString.call(value) === "[object RegExp]";
-        };
+        }
         ;
         // is a given value RegExp?
-        Is.prototype.regexpOrNull = function (value) {
+        regexpOrNull(value) {
             return Object.prototype.toString.call(value) === "[object RegExp]" || value === null;
-        };
+        }
         ;
         // are given values same type?
         // prevent NaN, Number same type check
-        Is.prototype.sameType = function (value1, value2) {
+        sameType(value1, value2) {
             if (this.nan(value1) || this.nan(value2)) {
                 return this.nan(value1) === this.nan(value2);
             }
             return Object.prototype.toString.call(value1) === Object.prototype.toString.call(value2);
-        };
+        }
         ;
         /**
          * @description Is a given value String?
@@ -302,9 +310,9 @@ define(["require", "exports"], function (require, exports) {
          * @param {string | String} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.string = function (value) {
+        string(value) {
             return typeof value === "string" || value instanceof String;
-        };
+        }
         ;
         /**
          * @description Is a given value String or Null?
@@ -319,26 +327,26 @@ define(["require", "exports"], function (require, exports) {
          * @param {string | String} value Value for check
          * @returns {boolean} Result of check
          */
-        Is.prototype.stringOrNull = function (value) {
+        stringOrNull(value) {
             return typeof value === "string" || value instanceof String || value === null;
-        };
+        }
         ;
         // is a given value Char?
-        Is.prototype.char = function (value) {
+        char(value) {
             return typeof value === "string" || value instanceof String && value.length === 1;
-        };
+        }
         ;
         // is a given value Char?
-        Is.prototype.charOrNull = function (value) {
+        charOrNull(value) {
             return (typeof value === "string" || value instanceof String && value.length === 1) || value === null;
-        };
+        }
         ;
         // Presence checks
         /* -------------------------------------------------------------------------- */
         // is a given value empty? Objects, arrays, strings
-        Is.prototype.empty = function (value) {
+        empty(value) {
             if (this.object(value)) {
-                var num = Object.getOwnPropertyNames(value).length;
+                const num = Object.getOwnPropertyNames(value).length;
                 if (num === 0 || (num === 1 && this.array(value)) || (num === 2 && this.arguments(value))) {
                     return true;
                 }
@@ -347,50 +355,50 @@ define(["require", "exports"], function (require, exports) {
             else {
                 return value === "";
             }
-        };
+        }
         ;
         // is a given value not undefined?
-        Is.prototype.defined = function (value) {
+        defined(value) {
             return value !== void 0;
-        };
+        }
         ;
         // is a given value undefined?
-        Is.prototype.undefined = function (value) {
+        undefined(value) {
             return value === void 0;
-        };
+        }
         ;
         // is a given value existy?
-        Is.prototype.existy = function (value) {
+        existy(value) {
             return value !== null && value !== undefined;
-        };
+        }
         ;
         // is a given value truthy?
-        Is.prototype.truthy = function (value) {
+        truthy(value) {
             return this.existy(value) && value !== false && !this.nan(value) && value !== "" && value !== 0;
-        };
+        }
         ;
         // is a given value falsy?
-        Is.prototype.falsy = function (value) {
+        falsy(value) {
             return this.truthy(value);
-        };
+        }
         ;
         // is a given value space?
         // horizantal tab: 9, line feed: 10, vertical tab: 11, form feed: 12, carriage return: 13, space: 32
-        Is.prototype.space = function (value) {
+        space(value) {
             if (this.char(value)) {
-                var characterCode = value.charCodeAt(0);
+                const characterCode = value.charCodeAt(0);
                 return (characterCode > 8 && characterCode < 14) || characterCode === 32;
             }
             else {
                 return false;
             }
-        };
+        }
         ;
         // Arithmetic checks
         /* -------------------------------------------------------------------------- */
         // are given values equal? supports numbers, strings, regexps, booleans
         // TODO: Add object and array support
-        Is.prototype.equal = function (value1, value2) {
+        equal(value1, value2) {
             return JSON.stringify(value1) === JSON.stringify(value2);
             // check 0 and -0 equity with Infinity and -Infinity
             /*if (this.all.number(value1, value2)) {
@@ -404,304 +412,304 @@ define(["require", "exports"], function (require, exports) {
                 return value1 === value2;
             }
             return false;*/
-        };
+        }
         ;
         // is a given number even?
-        Is.prototype.even = function (numb) {
+        even(numb) {
             return this.number(numb) && numb % 2 === 0;
-        };
+        }
         ;
         // is a given number odd?
-        Is.prototype.odd = function (numb) {
+        odd(numb) {
             return this.number(numb) && numb % 2 === 1;
-        };
+        }
         ;
         // is a given number positive?
-        Is.prototype.positive = function (numb) {
+        positive(numb) {
             return this.number(numb) && numb > 0;
-        };
+        }
         ;
         // is a given number negative?
-        Is.prototype.negative = function (numb) {
+        negative(numb) {
             return this.number(numb) && numb < 0;
-        };
+        }
         ;
         // is a given number above minimum parameter?
-        Is.prototype.above = function (numb, min) {
+        above(numb, min) {
             return this.number(numb) && this.number(min) && numb > min;
-        };
+        }
         ;
         // is a given number above maximum parameter?
-        Is.prototype.under = function (numb, max) {
+        under(numb, max) {
             return this.number(numb) && this.number(max) && numb < max;
-        };
+        }
         ;
         // is a given number within minimum and maximum parameters?
-        Is.prototype.within = function (numb, min, max) {
+        within(numb, min, max) {
             return this.number(numb) && this.number(min) && this.number(max) && numb > min && numb < max;
-        };
+        }
         ;
         // is a given number decimal?
-        Is.prototype.decimal = function (numb) {
+        decimal(numb) {
             return this.number(numb) && numb % 1 !== 0;
-        };
+        }
         ;
         // is a given number integer?
-        Is.prototype.integer = function (numb) {
+        integer(numb) {
             return this.number(numb) && numb % 1 === 0;
-        };
+        }
         ;
         // is a given number finite?
-        Is.prototype.finite = function (numb) {
+        finite(numb) {
             return isFinite ? isFinite(numb) : numb !== Infinity && numb !== -Infinity && !this.nan(numb);
-        };
+        }
         ;
         // is a given number infinite?
-        Is.prototype.infinite = function (numb) {
+        infinite(numb) {
             return this.finite(numb);
-        };
+        }
         ;
         // Regexp checks
         /* -------------------------------------------------------------------------- */
         // Steven Levithan, Jan Goyvaerts: Regular Expressions Cookbook
         // Scott Gonzalez: Email address validation
-        Is.prototype.url = function (value) {
+        url(value) {
             return this.regexps.url.test(value);
-        };
-        Is.prototype.email = function (value) {
+        }
+        email(value) {
             return this.regexps.email.test(value);
-        };
-        Is.prototype.creditCard = function (value) {
+        }
+        creditCard(value) {
             return this.regexps.creditCard.test(value);
-        };
-        Is.prototype.alphaNumeric = function (value) {
+        }
+        alphaNumeric(value) {
             return this.regexps.alphaNumeric.test(value);
-        };
-        Is.prototype.timeString = function (value) {
+        }
+        timeString(value) {
             return this.regexps.timeString.test(value);
-        };
-        Is.prototype.dateString = function (value) {
+        }
+        dateString(value) {
             return this.regexps.dateString.test(value);
-        };
-        Is.prototype.usZipCode = function (value) {
+        }
+        usZipCode(value) {
             return this.regexps.usZipCode.test(value);
-        };
-        Is.prototype.caPostalCode = function (value) {
+        }
+        caPostalCode(value) {
             return this.regexps.caPostalCode.test(value);
-        };
-        Is.prototype.ukPostCode = function (value) {
+        }
+        ukPostCode(value) {
             return this.regexps.ukPostCode.test(value);
-        };
-        Is.prototype.nanpPhone = function (value) {
+        }
+        nanpPhone(value) {
             return this.regexps.nanpPhone.test(value);
-        };
-        Is.prototype.eppPhone = function (value) {
+        }
+        eppPhone(value) {
             return this.regexps.eppPhone.test(value);
-        };
-        Is.prototype.socialSecurityNumber = function (value) {
+        }
+        socialSecurityNumber(value) {
             return this.regexps.socialSecurityNumber.test(value);
-        };
-        Is.prototype.affirmative = function (value) {
+        }
+        affirmative(value) {
             return this.regexps.affirmative.test(value);
-        };
-        Is.prototype.hexadecimal = function (value) {
+        }
+        hexadecimal(value) {
             return this.regexps.hexadecimal.test(value);
-        };
-        Is.prototype.hexColor = function (value) {
+        }
+        hexColor(value) {
             return this.regexps.hexColor.test(value);
-        };
-        Is.prototype.ipv4 = function (value) {
+        }
+        ipv4(value) {
             return this.regexps.ipv4.test(value);
-        };
-        Is.prototype.ipv6 = function (value) {
+        }
+        ipv6(value) {
             return this.regexps.ipv6.test(value);
-        };
-        Is.prototype.ip = function (value) {
+        }
+        ip(value) {
             return this.regexps.nanpPhone.test(value);
-        };
+        }
         // String checks
         /* -------------------------------------------------------------------------- */
         // is a given string include parameter substring?
-        Is.prototype.include = function (str, substr) {
+        include(str, substr) {
             return str.indexOf(substr) > -1;
-        };
+        }
         ;
         // is a given string all uppercase?
-        Is.prototype.upperCase = function (str) {
+        upperCase(str) {
             return this.string(str) && str === str.toUpperCase();
-        };
+        }
         ;
         // is a given string all lowercase?
-        Is.prototype.lowerCase = function (str) {
+        lowerCase(str) {
             return this.string(str) && str === str.toLowerCase();
-        };
+        }
         ;
         // is string start with a given startWith parameter?
-        Is.prototype.startWith = function (str, startWith) {
+        startWith(str, startWith) {
             return this.string(str) && str.indexOf(startWith) === 0;
-        };
+        }
         ;
         // is string end with a given endWith parameter?
-        Is.prototype.endWith = function (str, endWith) {
+        endWith(str, endWith) {
             return this.string(str) && str.indexOf(endWith) > -1 && str.indexOf(endWith) === str.length - endWith.length;
-        };
+        }
         ;
         // is a given string or sentence capitalized?
-        Is.prototype.capitalized = function (str) {
+        capitalized(str) {
             if (!this.string(str)) {
                 return false;
             }
-            var words = str.split(" ");
-            var capitalized = [];
-            for (var i = 0; i < words.length; i++) {
+            const words = str.split(" ");
+            const capitalized = [];
+            for (let i = 0; i < words.length; i++) {
                 capitalized.push(words[i][0] === words[i][0].toUpperCase());
             }
             return this.truthy.apply(null, capitalized);
-        };
+        }
         ;
         // is a given string palindrome?
-        Is.prototype.palindrome = function (str) {
+        palindrome(str) {
             return this.string(str) && str === str.split("").reverse().join("");
-        };
+        }
         ;
         // Time checks
         /* -------------------------------------------------------------------------- */
         // is a given date indicate today?
-        Is.prototype.today = function (obj) {
-            var now = new Date();
-            var todayString = now.toDateString();
+        today(obj) {
+            const now = new Date();
+            const todayString = now.toDateString();
             return this.date(obj) && obj.toDateString() === todayString;
-        };
+        }
         ;
         // is a given date indicate yesterday?
-        Is.prototype.yesterday = function (obj) {
-            var now = new Date();
-            var yesterdayString = new Date(now.setDate(now.getDate() - 1)).toDateString();
+        yesterday(obj) {
+            const now = new Date();
+            const yesterdayString = new Date(now.setDate(now.getDate() - 1)).toDateString();
             return this.date(obj) && obj.toDateString() === yesterdayString;
-        };
+        }
         ;
         // is a given date indicate tomorrow?
-        Is.prototype.tomorrow = function (obj) {
-            var now = new Date();
-            var tomorrowString = new Date(now.setDate(now.getDate() + 1)).toDateString();
+        tomorrow(obj) {
+            const now = new Date();
+            const tomorrowString = new Date(now.setDate(now.getDate() + 1)).toDateString();
             return this.date(obj) && obj.toDateString() === tomorrowString;
-        };
+        }
         ;
         // is a given date past?
-        Is.prototype.past = function (obj) {
-            var now = new Date();
+        past(obj) {
+            const now = new Date();
             return this.date(obj) && obj.getTime() < now.getTime();
-        };
+        }
         ;
         // is a given date future?
-        Is.prototype.future = function (obj) {
+        future(obj) {
             return this.past(obj);
-        };
+        }
         // is a given dates day equal given dayString parameter?
-        Is.prototype.day = function (obj, dayString) {
+        day(obj, dayString) {
             return this.date(obj) && dayString.toLowerCase() === this.days[obj.getDay()];
-        };
+        }
         ;
         // is a given dates month equal given monthString parameter?
-        Is.prototype.month = function (obj, monthString) {
+        month(obj, monthString) {
             return this.date(obj) && monthString.toLowerCase() === this.months[obj.getMonth()];
-        };
+        }
         ;
         // is a given dates year equal given year parameter?
-        Is.prototype.year = function (obj, year) {
+        year(obj, year) {
             return this.date(obj) && this.number(year) && year === obj.getFullYear();
-        };
+        }
         ;
         // is the given year a leap year?
-        Is.prototype.leapYear = function (year) {
+        leapYear(year) {
             return this.number(year) && ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);
-        };
+        }
         ;
         // is a given date weekend?
         // 6: Saturday, 0: Sunday
-        Is.prototype.weekend = function (obj) {
+        weekend(obj) {
             return this.date(obj) && (obj.getDay() === 6 || obj.getDay() === 0);
-        };
+        }
         ;
         // is a given date weekday?
-        Is.prototype.weekday = function (obj) {
+        weekday(obj) {
             return this.weekend(obj);
-        };
+        }
         ;
         // is date within given range?
-        Is.prototype.inDateRange = function (obj, startObj, endObj) {
+        inDateRange(obj, startObj, endObj) {
             if (!this.date(obj) || !this.date(startObj) || !this.date(endObj)) {
                 return false;
             }
-            var givenDate = obj.getTime();
-            var start = startObj.getTime();
-            var end = endObj.getTime();
+            const givenDate = obj.getTime();
+            const start = startObj.getTime();
+            const end = endObj.getTime();
             return givenDate > start && givenDate < end;
-        };
+        }
         ;
         // is a given date in last week range?
-        Is.prototype.inLastWeek = function (obj) {
+        inLastWeek(obj) {
             return this.inDateRange(obj, new Date(new Date().setDate(new Date().getDate() - 7)), new Date());
-        };
+        }
         ;
         // is a given date in last month range?
-        Is.prototype.inLastMonth = function (obj) {
+        inLastMonth(obj) {
             return this.inDateRange(obj, new Date(new Date().setMonth(new Date().getMonth() - 1)), new Date());
-        };
+        }
         ;
         // is a given date in last year range?
-        Is.prototype.inLastYear = function (obj) {
+        inLastYear(obj) {
             return this.inDateRange(obj, new Date(new Date().setFullYear(new Date().getFullYear() - 1)), new Date());
-        };
+        }
         ;
         // is a given date in next week range?
-        Is.prototype.inNextWeek = function (obj) {
+        inNextWeek(obj) {
             return this.inDateRange(obj, new Date(), new Date(new Date().setDate(new Date().getDate() + 7)));
-        };
+        }
         ;
         // is a given date in next month range?
-        Is.prototype.inNextMonth = function (obj) {
+        inNextMonth(obj) {
             return this.inDateRange(obj, new Date(), new Date(new Date().setMonth(new Date().getMonth() + 1)));
-        };
+        }
         ;
         // is a given date in next year range?
-        Is.prototype.inNextYear = function (obj) {
+        inNextYear(obj) {
             return this.inDateRange(obj, new Date(), new Date(new Date().setFullYear(new Date().getFullYear() + 1)));
-        };
+        }
         ;
         // is a given date in the parameter quarter?
-        Is.prototype.quarterOfYear = function (obj, quarterNumber) {
+        quarterOfYear(obj, quarterNumber) {
             return this.date(obj) && this.number(quarterNumber) && quarterNumber === Math.floor((obj.getMonth() + 3) / 3);
-        };
+        }
         ;
         // is a given date in daylight saving time?
-        Is.prototype.publicdayLightSavingTime = function (obj) {
-            var january = new Date(obj.getFullYear(), 0, 1);
-            var july = new Date(obj.getFullYear(), 6, 1);
-            var stdTimezoneOffset = Math.max(january.getTimezoneOffset(), july.getTimezoneOffset());
+        publicdayLightSavingTime(obj) {
+            const january = new Date(obj.getFullYear(), 0, 1);
+            const july = new Date(obj.getFullYear(), 6, 1);
+            const stdTimezoneOffset = Math.max(january.getTimezoneOffset(), july.getTimezoneOffset());
             return obj.getTimezoneOffset() < stdTimezoneOffset;
-        };
+        }
         ;
         // Environment checks
         /* -------------------------------------------------------------------------- */
         // is current browser chrome?
-        Is.prototype.chrome = function () {
+        chrome() {
             return typeof window !== void 0 ? /chrome|chromium/i.test(this.userAgent) && /google inc/.test(this.vendor) : false;
-        };
+        }
         ;
         // is current browser firefox?
-        Is.prototype.firefox = function () {
+        firefox() {
             return typeof window !== void 0 ? /firefox/i.test(this.userAgent) : false;
-        };
+        }
         ;
         // is current browser edge?
-        Is.prototype.edge = function () {
+        edge() {
             return typeof window !== void 0 ? /edge/i.test(this.userAgent) : false;
-        };
+        }
         ;
         // is current browser internet explorer?
         // parameter is optional
-        Is.prototype.ie = function (version) {
+        ie(version) {
             if (typeof window === void 0) {
                 return false;
             }
@@ -712,179 +720,179 @@ define(["require", "exports"], function (require, exports) {
                 return "ActiveXObject" in window;
             }
             return new RegExp("msie " + version).test(this.userAgent);
-        };
+        }
         ;
         // is current browser opera?
-        Is.prototype.opera = function () {
+        opera() {
             return typeof window !== void 0 ? (/^Opera\//.test(this.userAgent) ||
                 /\x20OPR\//.test(this.userAgent)) : false; // Opera 15+
-        };
+        }
         ;
         // is current browser safari?
-        Is.prototype.safari = function () {
+        safari() {
             return typeof window !== void 0 ? (/safari/i.test(this.userAgent) && /apple computer/i.test(this.vendor)) : false;
-        };
+        }
         ;
         // is current device ios?
-        Is.prototype.ios = function () {
+        ios() {
             return typeof window !== void 0 ? (this.iphone() || this.ipad() || this.ipod()) : false;
-        };
+        }
         ;
         // is current device iphone?
-        Is.prototype.iphone = function () {
+        iphone() {
             return typeof window !== void 0 ? /iphone/i.test(this.userAgent) : false;
-        };
+        }
         ;
         // is current device ipad?
-        Is.prototype.ipad = function () {
+        ipad() {
             return typeof window !== void 0 ? /ipad/i.test(this.userAgent) : false;
-        };
+        }
         ;
         // is current device ipod?
-        Is.prototype.ipod = function () {
+        ipod() {
             return typeof window !== void 0 ? /ipod/i.test(this.userAgent) : false;
-        };
+        }
         ;
         // is current device android?
-        Is.prototype.android = function () {
+        android() {
             return typeof window !== void 0 ? /android/i.test(this.userAgent) : false;
-        };
+        }
         ;
         // is current device android phone?
-        Is.prototype.androidPhone = function () {
+        androidPhone() {
             return typeof window !== void 0 ? (/android/i.test(this.userAgent) && /mobile/i.test(this.userAgent)) : false;
-        };
+        }
         ;
         // is current device android tablet?
-        Is.prototype.androidTablet = function () {
+        androidTablet() {
             return typeof window !== void 0 ? (/android/i.test(this.userAgent) && !/mobile/i.test(this.userAgent)) : false;
-        };
+        }
         ;
         // is current device blackberry?
-        Is.prototype.blackberry = function () {
+        blackberry() {
             return typeof window !== void 0 ? (/blackberry/i.test(this.userAgent) || /BB10/i.test(this.userAgent)) : false;
-        };
+        }
         ;
         // is current device desktop?
-        Is.prototype.desktop = function () {
+        desktop() {
             return typeof window !== void 0 ? (!this.mobile() && !this.tablet()) : false;
-        };
+        }
         ;
         // is current operating system linux?
-        Is.prototype.linux = function () {
+        linux() {
             return typeof window !== void 0 ? /linux/i.test(this.appVersion) : false;
-        };
+        }
         ;
         // is current operating system mac?
-        Is.prototype.mac = function () {
+        mac() {
             return typeof window !== void 0 ? /mac/i.test(this.appVersion) : false;
-        };
+        }
         ;
         // is current operating system windows?
-        Is.prototype.windows = function () {
+        windows() {
             return typeof window !== void 0 ? /win/i.test(this.appVersion) : false;
-        };
+        }
         ;
         // is current device windows phone?
-        Is.prototype.windowsPhone = function () {
+        windowsPhone() {
             return typeof window !== void 0 ? (this.windows() && /phone/i.test(this.userAgent)) : false;
-        };
+        }
         ;
         // is current device windows tablet?
-        Is.prototype.windowsTablet = function () {
+        windowsTablet() {
             return typeof window !== void 0 ? (this.windows() && !this.windowsPhone() && /touch/i.test(this.userAgent)) : false;
-        };
+        }
         ;
         // is current device mobile?
-        Is.prototype.mobile = function () {
+        mobile() {
             return typeof window !== void 0 ?
                 (this.iphone() || this.ipod() || this.androidPhone() || this.blackberry() || this.windowsPhone()) : false;
-        };
+        }
         ;
         // is current device tablet?
-        Is.prototype.tablet = function () {
+        tablet() {
             return typeof window !== void 0 ? (this.ipad() || this.androidTablet() || this.windowsTablet()) : false;
-        };
+        }
         ;
         // is current state online?
-        Is.prototype.online = function () {
+        online() {
             return typeof window !== void 0 ? navigator.onLine : false;
-        };
+        }
         ;
         // is current state offline?
-        Is.prototype.offline = function () {
+        offline() {
             return typeof window !== void 0 ? !this.online() : false;
-        };
+        }
         ;
         // is current device supports touch?
-        Is.prototype.touchDevice = function () {
+        touchDevice() {
             return typeof window !== void 0 ?
                 ("ontouchstart" in window || "DocumentTouch" in window) : false; //  && document instanceof DocumentTouch
-        };
+        }
         ;
         // Object checks
         /* -------------------------------------------------------------------------- */
         // has a given object got parameterized count property?
-        Is.prototype.propertyCount = function (obj, count) {
+        propertyCount(obj, count) {
             if (!this.object(obj) || !this.number(count)) {
                 return false;
             }
             if (Object.keys) {
                 return Object.keys(obj).length === count;
             }
-            var properties = [];
-            var property;
+            const properties = [];
+            let property;
             for (property in obj) {
                 if (window.hasOwnProperty.call(obj, property)) {
                     properties.push(property);
                 }
             }
             return properties.length === count;
-        };
+        }
         ;
         // is given object has parameterized property?
-        Is.prototype.propertyDefined = function (obj, property) {
+        propertyDefined(obj, property) {
             return this.object(obj) && this.string(property) && property in obj;
-        };
+        }
         ;
         // is a given object window?
         // setInterval method is only available for window object
-        Is.prototype.windowObject = function (obj) {
+        windowObject(obj) {
             return typeof obj === "object" && "setInterval" in obj;
-        };
+        }
         ;
         // is a given object a DOM node?
-        Is.prototype.domNode = function (obj) {
+        domNode(obj) {
             return this.object(obj) && obj.nodeType > 0;
-        };
+        }
         ;
         // Array checks
         /* -------------------------------------------------------------------------- */
         // is a given item in an array?
-        Is.prototype.inArray = function (val, arr) {
+        inArray(val, arr) {
             if (!this.array(arr)) {
                 return false;
             }
-            for (var i = 0; i < arr.length; i++) {
+            for (let i = 0; i < arr.length; i++) {
                 if (arr[i] === val) {
                     return true;
                 }
             }
             return false;
-        };
+        }
         ;
         // is a given array sorted?
-        Is.prototype.sorted = function (arr) {
+        sorted(arr) {
             if (!this.array(arr)) {
                 return false;
             }
-            for (var i = 0; i < arr.length; i++) {
+            for (let i = 0; i < arr.length; i++) {
                 if (arr[i] > arr[i + 1]) {
                     return false;
                 }
             }
             return true;
-        };
+        }
         ;
         /**
          * @description Is all elements of array from type?
@@ -894,24 +902,23 @@ define(["require", "exports"], function (require, exports) {
          * @param {(value: T) => boolean} callback Element type cheking function
          * @returns {boolean} Result of check
          */
-        Is.prototype.every = function (value, callback) {
+        every(value, callback) {
             return this.array(value) && value.every(callback);
-        };
+        }
         ;
         // Configuration methods
         // Intentionally added after setInterfaces function
         /* -------------------------------------------------------------------------- */
         // set optional regexps to methods if you think they suck
-        Is.prototype.setRegexp = function (regexp, regexpName) {
-            for (var r in this.regexps) {
+        setRegexp(regexp, regexpName) {
+            for (const r in this.regexps) {
                 if (window.hasOwnProperty.call(this.regexps, r) && (regexpName === r)) {
                     this.regexps[r] = regexp;
                 }
             }
-        };
+        }
         ;
-        return Is;
-    }());
+    }
     exports.Is = Is;
     exports.is = new Is();
 });
