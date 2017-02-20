@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.16
+ * is.ts 1.0.17
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  * 
@@ -22,7 +22,7 @@
  */
 export class Is {
 
-    public VERSION: string = "0.8.16";
+    public VERSION: string = "1.0.17";
 
     public days: string[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     public months: string[] = [
@@ -121,7 +121,7 @@ export class Is {
      * @param {Array<any>} value Value for check
      * @returns {boolean} Result of check
      */
-    public arrayOrNull(value: Array<any>): boolean {
+    public arrayOrNull(value: Array<any> | null): boolean {
         return Array.isArray(value) || value === null;
     };
 
@@ -153,7 +153,7 @@ export class Is {
      * @param {(boolean | Boolean)} value Value for check
      * @returns {boolean} Result of check
      */
-    public booleanOrNull(value: boolean | Boolean): boolean {
+    public booleanOrNull(value: boolean | Boolean | null): boolean {
         return typeof value === "boolean" || value instanceof Boolean || value === null;
     };
 
@@ -185,7 +185,7 @@ export class Is {
      * @param {Date} value Value for check
      * @returns {boolean} Result of check
      */
-    public dateOrNull(value: Date): boolean {
+    public dateOrNull(value: Date | null): boolean {
         return value instanceof Date || value === null;
     };
 
@@ -195,8 +195,8 @@ export class Is {
     };
 
     // is a given value Error object or Null?
-    public errorOrNull(value: Error): boolean {
-        return this.error(value) || value === null;
+    public errorOrNull(value: Error | null): boolean {
+        return this.error(value as Error) || value === null;
     };
 
     // is a given value function?
@@ -205,8 +205,8 @@ export class Is {
     };
 
     // is a given value function object or Null?
-    public functionOrNull(value: Function): boolean {
-        return this.function(value) || value === null;
+    public functionOrNull(value: Function | null): boolean {
+        return this.function(value as Function) || value === null;
     };
 
     // is a given value NaN?
@@ -215,7 +215,7 @@ export class Is {
     };
 
     // is a given value NaN or Null?
-    public nanOrNull(value: any): boolean {
+    public nanOrNull(value: any | null): boolean {
         return !this.number(value) || value === null;
     };
 
@@ -267,7 +267,7 @@ export class Is {
      * @param {number | Number} value Value for check
      * @returns {boolean} Result of check
      */
-    public numberOrNull(value: number | Number): boolean { // NaN have typeof number
+    public numberOrNull(value: number | Number | null): boolean { // NaN have typeof number
         return (typeof value === "number" || value instanceof Number) &&
             !isNaN(<number>value) || value === null; // <number> TS bug, isNaN accept Number
     };
@@ -279,7 +279,7 @@ export class Is {
     };
 
     // is a given value object?
-    public objectOrNull(value: Object): boolean {
+    public objectOrNull(value: Object | null): boolean {
         const type: string = typeof value;
         return (type === "function" || type === "object" && !!value) || value === null;
     };
@@ -290,7 +290,7 @@ export class Is {
     };
 
     // is given value a pure JSON object?
-    public jsonOrNull(value: Object): boolean {
+    public jsonOrNull(value: Object | null): boolean {
         return Object.prototype.toString.call(value) === "[object Object]" || value === null;
     };
 
@@ -300,7 +300,7 @@ export class Is {
     };
 
     // is a given value RegExp?
-    public regexpOrNull(value: RegExp): boolean {
+    public regexpOrNull(value: RegExp | null): boolean {
         return Object.prototype.toString.call(value) === "[object RegExp]" || value === null;
     };
 
@@ -343,7 +343,7 @@ export class Is {
      * @param {string | String} value Value for check
      * @returns {boolean} Result of check
      */
-    public stringOrNull(value: string | String): boolean {
+    public stringOrNull(value: string | String | null): boolean {
         return typeof value === "string" || value instanceof String || value === null;
     };
 
@@ -353,7 +353,7 @@ export class Is {
     };
 
     // is a given value Char?
-    public charOrNull(value: string | String): boolean {
+    public charOrNull(value: string | String | null): boolean {
         return (typeof value === "string" || value instanceof String && value.length === 1) || value === null;
     };
 

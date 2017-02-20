@@ -1,5 +1,5 @@
 /**
- * is.ts 0.8.16
+ * is.ts 1.0.17
  * Author: Aras Atasaygin https://github.com/arasatasaygin/is.js
  * Author of fork: Evgeny Labutin https://github.com/LabEG/is.js
  *
@@ -72,7 +72,7 @@ export declare class Is {
      * @param {Array<any>} value Value for check
      * @returns {boolean} Result of check
      */
-    arrayOrNull(value: Array<any>): boolean;
+    arrayOrNull(value: Array<any> | null): boolean;
     /**
      * @description Is a given value Boolean?
      *
@@ -98,7 +98,7 @@ export declare class Is {
      * @param {(boolean | Boolean)} value Value for check
      * @returns {boolean} Result of check
      */
-    booleanOrNull(value: boolean | Boolean): boolean;
+    booleanOrNull(value: boolean | Boolean | null): boolean;
     /**
      * @description Is a given value Date Object?
      *
@@ -124,13 +124,13 @@ export declare class Is {
      * @param {Date} value Value for check
      * @returns {boolean} Result of check
      */
-    dateOrNull(value: Date): boolean;
+    dateOrNull(value: Date | null): boolean;
     error(value: Error): boolean;
-    errorOrNull(value: Error): boolean;
+    errorOrNull(value: Error | null): boolean;
     function(value: Function): boolean;
-    functionOrNull(value: Function): boolean;
+    functionOrNull(value: Function | null): boolean;
     nan(value: any): boolean;
-    nanOrNull(value: any): boolean;
+    nanOrNull(value: any | null): boolean;
     /**
      * @description Is a given value null?
      *
@@ -172,13 +172,13 @@ export declare class Is {
      * @param {number | Number} value Value for check
      * @returns {boolean} Result of check
      */
-    numberOrNull(value: number | Number): boolean;
+    numberOrNull(value: number | Number | null): boolean;
     object(value: Object): boolean;
-    objectOrNull(value: Object): boolean;
+    objectOrNull(value: Object | null): boolean;
     json(value: Object): boolean;
-    jsonOrNull(value: Object): boolean;
+    jsonOrNull(value: Object | null): boolean;
     regexp(value: RegExp): boolean;
-    regexpOrNull(value: RegExp): boolean;
+    regexpOrNull(value: RegExp | null): boolean;
     sameType(value1: any, value2: any): boolean;
     /**
      * @description Is a given value String?
@@ -207,9 +207,9 @@ export declare class Is {
      * @param {string | String} value Value for check
      * @returns {boolean} Result of check
      */
-    stringOrNull(value: string | String): boolean;
+    stringOrNull(value: string | String | null): boolean;
     char(value: string | String): boolean;
-    charOrNull(value: string | String): boolean;
+    charOrNull(value: string | String | null): boolean;
     empty(value: any): boolean;
     defined(value: any): boolean;
     undefined(value: any): boolean;
